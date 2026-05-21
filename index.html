@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGO - Unidade Operacional</title>
+    <!-- Tailwind CSS para estilização e responsividade -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ícones FontAwesome para facilitar a navegação no celular -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- MENU DE NAVEGAÇÃO (RESPONSIVO) -->
+    <!-- Topbar para celular -->
+    <div class="bg-slate-800 text-white p-4 flex justify-between items-center md:hidden w-full shadow-md z-50 fixed top-0 left-0">
+        <h1 class="text-lg font-bold tracking-wider text-emerald-400">SGO CORREIOS</h1>
+        <button onclick="toggleMobileMenu()" class="text-white text-2xl focus:outline-none">
+            <i id="menu-icon" class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar para Desktop / Menu retrátil para Mobile -->
+    <div id="sidebar" class="w-full md:w-64 bg-slate-800 text-white flex flex-col justify-between fixed md:sticky top-0 h-screen z-40 transition-transform duration-300 transform -translate-x-full md:translate-x-0 pt-16 md:pt-0 shadow-xl">
+        <div class="p-5">
+            <h1 class="hidden md:block text-xl font-bold tracking-wider uppercase mb-10 text-emerald-400 border-b border-slate-700 pb-4">SGO Unidade</h1>
+            <nav class="space-y-1">
+                <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-3 text-left py-3 px-4 rounded-lg transition bg-slate-700 font-semibold text-emerald-400" id="btn-dashboard">
+                    <i class="fa-solid fa-chart-pie w-5"></i> Dashboard
+                </button>
+                <button onclick="switchTab('funcionarios')" class="tab-btn w-full flex items-center gap-3 text-left py-3 px-4 rounded-lg transition text-slate-300 hover:bg-slate-700 hover:text-white" id="btn-funcionarios">
+                    <i class="fa-solid fa-users w-5"></i> Equipe e Cadastro
+                </button>
+                <button onclick="switchTab('alocacao')" class="tab-btn w-full flex items-center gap-3 text-left py-3 px-4 rounded-lg transition text-slate-300 hover:bg-slate-700 hover:text-white" id="btn-alocacao">
+                    <i class="fa-solid fa-map-location-dot w-5"></i> Alocar Distritos
+                </button>
+                <button onclick="switchTab('carga')" class="tab-btn w-full flex items-center gap-3 text-left py-3 px-4 rounded-lg transition text-slate-300 hover:bg-slate-700 hover:text-white" id="btn-carga">
+                    <i class="fa-solid fa-box-open w-5"></i> Movimento de Carga
+                </button>
+            </nav>
+        </div>
+        <div class="p-4 text-xs text-slate-400 border-t border-slate-700 bg-slate-900/50 flex justify-between items-center">
+            <span>Operação Diária:</span>
+            <span id="current-date" class="font-bold text-emerald-400">--/--/----</span>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL (MÓDULOS DO APLICATIVO) -->
+    <div class="flex-1 p-4 md:p-8 mt-16 md:mt-0 overflow-x-hidden">
+        
+        <!-- ================= MÓDULO: DASHBOARD ================= -->
+        <div id="tab-dashboard" class="tab-content space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b pb-4">
+                <h2 class="text-2xl font-black text-slate-700">Painel de Controle Operacional</h2>
+                <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">Atualização em tempo real</span>
+            </div>
+            
+            <!-- Cards de Volumetria de Objetos Postais -->
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Balanço de Objetos Postais (Hoje)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Simples -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-blue-500 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase text-slate-400">Objetos Simples</span>
+                        <i class="fa-solid fa-envelope text-blue-500 bg-blue-50 p-2 rounded-lg"></i>
+                    </div>
+                    <div class="grid grid-cols-2 border-t pt-2 mt-1 text-center">
+                        <div><span class="block text-xs font-medium text-gray-400">Saiu</span><span id="dash-simples-saiu" class="text-xl font-bold text-slate-700">0</span></div>
+                        <div class="border-l"><span class="block text-xs font-medium text-gray-400">Resto</span><span id="dash-simples-resto" class="text-xl font-bold text-slate-700">0</span></div>
+                    </div>
+                </div>
+                <!-- Encomendas -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-amber-500 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase text-slate-400">Encomendas Especiais</span>
+                        <i class="fa-solid fa-cubes text-amber-500 bg-amber-50 p-2 rounded-lg"></i>
+                    </div>
+                    <div class="grid grid-cols-2 border-t pt-2 mt-1 text-center">
+                        <div><span class="block text-xs font-medium text-gray-400">Saiu</span><span id="dash-encomendas-saiu" class="text-xl font-bold text-slate-700">0</span></div>
+                        <div class="border-l"><span class="block text-xs font-medium text-gray-400">Resto</span><span id="dash-encomendas-resto" class="text-xl font-bold text-slate-700">0</span></div>
+                    </div>
+                </div>
+                <!-- Registrados -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border-t-4 border-emerald-500 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase text-slate-400">Especiais Registrados</span>
+                        <i class="fa-solid fa-box-archive text-emerald-500 bg-emerald-50 p-2 rounded-lg"></i>
+                    </div>
+                    <div class="grid grid-cols-2 border-t pt-2 mt-1 text-center">
+                        <div><span class="block text-xs font-medium text-gray-400">Saiu</span><span id="dash-registrados-saiu" class="text-xl font-bold text-slate-700">0</span></div>
+                        <div class="border-l"><span class="block text-xs font-medium text-gray-400">Resto</span><span id="dash-registrados-resto" class="text-xl font-bold text-slate-700">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Totalização de Pessoal Ativo por Função -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Efetivo Alocado em Roteiros</h3>
+                <div id="dash-efetivo-lista" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+                    <!-- Injetado via Javascript -->
+                </div>
+            </div>
+
+            <!-- Distribuição Espacial / Onde cada um está -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
+                    <h3 class="font-bold text-slate-700">Espelho Operacional da Equipe</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase font-bold border-b">
+                                <th class="p-3">Funcionário</th>
+                                <th class="p-3">Função</th>
+                                <th class="p-3">Setor</th>
+                                <th class="p-3">Distrito Assinado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-tabela-distribuicao" class="text-sm divide-y">
+                            <!-- Injetado via Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MÓDULO: CADASTRO DE FUNCIONÁRIOS ================= -->
+        <div id="tab-funcionarios" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-bold text-slate-700 border-b pb-4">Cadastro Geral de Equipe</h2>
+            
+            <form id="form-funcionario" class="bg-white p-5 rounded-xl shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end border border-gray-200">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nome Completo</label>
+                    <input type="text" id="func-nome" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 focus:bg-white focus:outline-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Matrícula</label>
+                    <input type="text" id="func-matricula" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 focus:bg-white focus:outline-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Função Operacional</label>
+                    <select id="func-funcao" class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 focus:bg-white focus:outline-emerald-500 transition">
+                        <option value="Motorista">Motorista</option>
+                        <option value="Motociclista">Motociclista</option>
+                        <option value="Ciclista">Ciclista</option>
+                        <option value="Pedestre">Pedestre</option>
+                        <option value="Interno">Interno</option>
+                        <option value="Gestão">Gestão</option>
+                    </select>
+                </div>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-lg transition shadow-md shadow-emerald-600/10 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> Salvar na Base
+                </button>
+            </form>
+
+            <!-- Lista Geral de Funcionários Ativos -->
+            <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b font-bold text-slate-700">Efetivo Cadastrado na Unidade</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b">
+                                <th class="p-3">Matrícula</th>
+                                <th class="p-3">Nome</th>
+                                <th class="p-3">Função</th>
+                                <th class="p-3 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-funcionarios-corpo" class="text-sm divide-y">
+                            <!-- Injetado dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MÓDULO: ALOCAÇÃO DE DISTRITOS (FIXO) ================= -->
+        <div id="tab-alocacao" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-bold text-slate-700 border-b pb-4">Gerenciamento Fixo de Linhas e Roteiros</h2>
+            <p class="text-sm text-slate-500 -mt-4">Defina ou altere aqui o roteiro de trabalho estável do agente. Ele permanecerá fixado nesta linha até nova modificação manual.</p>
+
+            <form id="form-alocacao" class="bg-white p-5 rounded-xl shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end border border-gray-200">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Escolha o Agente</label>
+                    <select id="alocacao-func" required class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 focus:outline-emerald-500">
+                        <!-- Injetado via Javascript -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Setor Alvo</label>
+                    <select id="alocacao-tipo" onchange="atualizarSeletorDistritos()" class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 focus:outline-emerald-500">
+                        <option value="especial">Especial (301-334)</option>
+                        <option value="postal">Postal (601-624)</option>
+                        <option value="Nenhum">Nenhum (Ficar na Unidade / Sem Distrito)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Distrito Numérico</label>
+                    <select id="alocacao-distrito" class="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-50 focus:outline-emerald-500">
+                        <!-- Gerado automaticamente baseado na seleção acima -->
+                    </select>
+                </div>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-map-pin"></i> Atualizar Roteiro
+                </button>
+            </form>
+        </div>
+
+        <!-- ================= MÓDULO: GESTÃO DE CARGA DIÁRIA ================= -->
+        <div id="tab-carga" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-bold text-slate-700 border-b pb-4">Lançamento Volumétrico de Objetos</h2>
+            
+            <form id="form-carga" class="bg-white p-5 rounded-xl shadow-sm space-y-6 border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Simples -->
+                    <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                        <div class="flex items-center gap-2 text-blue-600 font-bold mb-3"><i class="fa-solid fa-envelope"></i> Objetos Simples</div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Saiu para Distribuição</label>
+                                <input type="number" id="carga-simples-saiu" min="0" class="w-full border border-gray-300 rounded-lg p-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Resto na Unidade</label>
+                                <input type="number" id="carga-simples-resto" min="0" class="w-full border border-gray-300 rounded-lg p-2">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Encomendas -->
+                    <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                        <div class="flex items-center gap-2 text-amber-600 font-bold mb-3"><i class="fa-solid fa-cubes"></i> Encomendas Especiais</div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Saiu para Distribuição</label>
+                                <input type="number" id="carga-encomendas-saiu" min="0" class="w-full border border-gray-300 rounded-lg p-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Resto na Unidade</label>
+                                <input type="number" id="carga-encomendas-resto" min="0" class="w-full border border-gray-300 rounded-lg p-2">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Registrados -->
+                    <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                        <div class="flex items-center gap-2 text-emerald-600 font-bold mb-3"><i class="fa-solid fa-box-archive"></i> Especiais Registrados</div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Saiu para Distribuição</label>
+                                <input type="number" id="carga-registrados-saiu" min="0" class="w-full border border-gray-300 rounded-lg p-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Resto na Unidade</label>
+                                <input type="number" id="carga-registrados-resto" min="0" class="w-full border border-gray-300 rounded-lg p-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md w-full sm:w-auto">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Gravar Carga de Hoje
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT DO PRODUTO (FIREBASE WEB MODULAR v9+) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Sua configuração original do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9rmTKGWXzq-wEr3SImGLmKQyEjvpHyHw",
+            authDomain: "controle-de-carga-e-pessoal.firebaseapp.com",
+            projectId: "controle-de-carga-e-pessoal",
+            storageBucket: "controle-de-carga-e-pessoal.firebasestorage.app",
+            messagingSenderId: "208095482783",
+            appId: "1:208095482783:web:3351b8b2f0a55271ed23aa"
+        };
+
+        // Inicializando as instâncias
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Marcação temporal do dia atual (Formato ISO: YYYY-MM-DD)
+        const HOJE = new Date().toISOString().split('T')[0];
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR');
+
+        // Memória local de dados
+        let cacheEquipe = [];
+
+        // Gatilho Inicializador da Aplicação
+        window.addEventListener('DOMContentLoaded', async () => {
+            atualizarSeletorDistritos();
+            await sincronizarAplicativo();
+        });
+
+        // CONTROLADOR RESPONSIVO: Fechar/Abrir Menu Lateral no Celular
+        window.toggleMobileMenu = function() {
+            const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('menu-icon');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                icon.classList.replace('fa-bars', 'fa-xmark');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                icon.classList.replace('fa-xmark', 'fa-bars');
+            }
+        }
+
+        // ALTERNADOR DE TELAS (SPA)
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('bg-slate-700', 'font-semibold', 'text-emerald-400'));
+            
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabName}`).classList.add('bg-slate-700', 'font-semibold', 'text-emerald-400');
+            
+            // Se estiver no celular, fecha a barra lateral ao trocar de tela
+            if (window.innerWidth < 768) toggleMobileMenu();
+        }
+
+        // POPULADOR DINÂMICO DOS DISTRITOS POSTAIS E ESPECIAIS
+        window.atualizarSeletorDistritos = function() {
+            const tipo = document.getElementById('alocacao-tipo').value;
+            const seletor = document.getElementById('alocacao-distrito');
+            seletor.innerHTML = '';
+
+            if (tipo === 'especial') {
+                seletor.disabled = false;
+                for (let i = 301; i <= 334; i++) {
+                    seletor.innerHTML += `<option value="${i}">Distrito ${i}</option>`;
+                }
+            } else if (tipo === 'postal') {
+                seletor.disabled = false;
+                for (let i = 601; i <= 624; i++) {
+                    seletor.innerHTML += `<option value="${i}">Distrito ${i}</option>`;
+                }
+            } else {
+                seletor.innerHTML = `<option value="Interno">Não se aplica</option>`;
+                seletor.disabled = true;
+            }
+        }
+
+        // FLUXO DE SINCRONIZAÇÃO GERAL DO CORE
+        async function sincronizarAplicativo() {
+            await buscarEquipe();
+            await carregarCargaDoDia();
+            renderizarDashboard();
+        }
+
+        // BUSCA E RENDERIZAÇÃO DA EQUIPE DE FUNCIONÁRIOS
+        async function buscarEquipe() {
+            const snapshot = await getDocs(collection(db, "funcionarios"));
+            cacheEquipe = [];
+            
+            const seletorAlocacao = document.getElementById('alocacao-func');
+            const tabelaCorpo = document.getElementById('lista-funcionarios-corpo');
+            
+            seletorAlocacao.innerHTML = '<option value="">Escolha um funcionário...</option>';
+            tabelaCorpo.innerHTML = '';
+
+            snapshot.forEach((doc) => {
+                const dados = doc.data();
+                cacheEquipe.push(dados);
+
+                // Adiciona ao seletor de rotas
+                seletorAlocacao.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`;
+                
+                // Adiciona na tabela de visualização administrativa
+                tabelaCorpo.innerHTML += `
+                    <tr>
+                        <td class="p-3 font-mono text-xs font-semibold text-slate-500">${dados.matricula}</td>
+                        <td class="p-3 font-bold text-slate-700">${dados.nome}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">${dados.funcao}</span></td>
+                        <td class="p-3 text-center">
+                            <button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-regular fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // BUSCA DA VOLUMETRIA LOGÍSTICA DIÁRIA
+        async function carregarCargaDoDia() {
+            const snapshot = await getDocs(collection(db, "carga_diaria"));
+            let cargaHoje = null;
+            
+            snapshot.forEach((doc) => {
+                if (doc.id === HOJE) cargaHoje = doc.data();
+            });
+
+            if (cargaHoje) {
+                document.getElementById('dash-simples-saiu').innerText = cargaHoje.simples_saiu || 0;
+                document.getElementById('dash-simples-resto').innerText = cargaHoje.simples_resto || 0;
+                document.getElementById('dash-encomendas-saiu').innerText = cargaHoje.encomendas_saiu || 0;
+                document.getElementById('dash-encomendas-resto').innerText = cargaHoje.encomendas_resto || 0;
+                document.getElementById('dash-registrados-saiu').innerText = cargaHoje.registrados_saiu || 0;
+                document.getElementById('dash-registrados-resto').innerText = cargaHoje.registrados_resto || 0;
+            } else {
+                // Zera visual caso não tenha registros ainda hoje
+                ['simples-saiu', 'simples-resto', 'encomendas-saiu', 'encomendas-resto', 'registrados-saiu', 'registrados-resto'].forEach(id => {
+                    document.getElementById(`dash-${id}`).innerText = '0';
+                });
+            }
+        }
+
+        // RENDERIZADOR DO MATRICIAL DE CONTROLE (DASHBOARD)
+        function renderizarDashboard() {
+            const tabelaDistribuicao = document.getElementById('dash-tabela-distribuicao');
+            const containerEfetivo = document.getElementById('dash-efetivo-lista');
+            
+            tabelaDistribuicao.innerHTML = '';
+            
+            // Dicionário mapeador de efetivo por funções
+            const contadores = { Motorista: 0, Motociclista: 0, Ciclista: 0, Pedestre: 0, Interno: 0, Gestão: 0 };
+
+            if (cacheEquipe.length === 0) {
+                tabelaDistribuicao.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">Nenhum funcionário ativo ou escalado.</td></tr>`;
+            }
+
+            cacheEquipe.forEach(func => {
+                const temDistrito = func.tipoSetor && func.tipoSetor !== 'Nenhum';
+                const distritoExibido = temDistrito ? `Distrito ${func.distrito}` : 'Não alocado';
+                const setorExibido = temDistrito ? func.tipoSetor : 'Unidade Interna';
+                
+                // Incrementa contador se estiver exercendo roteiro externo/interno ativo
+                if (contadores[func.funcao] !== undefined) {
+                    contadores[func.funcao]++;
+                }
+
+                // Linha de rastreabilidade
+                tabelaDistribuicao.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 font-semibold text-slate-700">${func.nome}</td>
+                        <td class="p-3 text-slate-500">${func.funcao}</td>
+                        <td class="p-3 font-medium capitalize ${temDistrito ? 'text-amber-600' : 'text-slate-400'}">${setorExibido}</td>
+                        <td class="p-3 font-bold ${temDistrito ? 'text-emerald-600' : 'text-slate-400'}">${distritoExibido}</td>
+                    </tr>
+                `;
+            });
+
+            // Geração de blocos de estatísticas de pessoal
+            containerEfetivo.innerHTML = '';
+            for (const [funcao, total] of Object.entries(contadores)) {
+                containerEfetivo.innerHTML += `
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-tight">${funcao}</div>
+                        <div class="text-xl font-black text-slate-700 mt-0.5">${total}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // CADASTRO DE NOVO FUNCIONÁRIO (ID POR MATRÍCULA)
+        document.getElementById('form-funcionario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const matricula = document.getElementById('func-matricula').value.trim();
+            const nome = document.getElementById('func-nome').value.trim();
+            const funcao = document.getElementById('func-funcao').value;
+
+            try {
+                await setDoc(doc(db, "funcionarios", matricula), {
+                    matricula, nome, funcao,
+                    tipoSetor: 'Nenhum', // Inicia limpo
+                    distrito: 'Interno'
+                });
+                alert("Agente inserido na base com sucesso!");
+                document.getElementById('form-funcionario').reset();
+                await sincronizarAplicativo();
+            } catch (err) {
+                console.error("Erro ao cadastrar funcionário:", err);
+            }
+        });
+
+        // ATUALIZAÇÃO MANUAL DO DISTRITO OPERACIONAL (PERSISTENTE/FIXO)
+        document.getElementById('form-alocacao').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const matricula = document.getElementById('alocacao-func').value;
+            const tipoSetor = document.getElementById('alocacao-tipo').value;
+            const distrito = document.getElementById('alocacao-distrito').value || 'Interno';
+
+            if(!matricula) return alert("Selecione um funcionário.");
+
+            try {
+                const referenciaDoc = doc(db, "funcionarios", matricula);
+                await updateDoc(referenciaDoc, { tipoSetor, distrito });
+                
+                alert("Roteiro geográfico atualizado com sucesso!");
+                document.getElementById('form-alocacao').reset();
+                atualizarSeletorDistritos();
+                await sincronizarAplicativo();
+                switchTab('dashboard'); // Retorna ao painel para ver o espelho atualizado
+            } catch (err) {
+                console.error("Erro na atualização de roteiro:", err);
+            }
+        });
+
+        // MOVIMENTAÇÃO DE VOLUMETRIA (CARGA DIÁRIA)
+        document.getElementById('form-carga').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                simples_saiu: Number(document.getElementById('carga-simples-saiu').value) || 0,
+                simples_resto: Number(document.getElementById('carga-simples-resto').value) || 0,
+                encomendas_saiu: Number(document.getElementById('carga-encomendas-saiu').value) || 0,
+                encomendas_resto: Number(document.getElementById('carga-encomendas-resto').value) || 0,
+                registrados_saiu: Number(document.getElementById('carga-registrados-saiu').value) || 0,
+                registrados_resto: Number(document.getElementById('carga-registrados-resto').value) || 0,
+                data: HOJE
+            };
+
+            try {
+                await setDoc(doc(db, "carga_diaria", HOJE), payload);
+                alert("Dados de movimentação de carga consolidados!");
+                await sincronizarAplicativo();
+                switchTab('dashboard');
+            } catch (err) {
+                console.error("Erro ao gravar fluxo de carga:", err);
+            }
+        });
+
+        // FUNÇÃO DE EXCLUSÃO DE AGENTE
+        window.deletarFuncionario = async function(matricula) {
+            if (confirm("Deseja realmente remover este funcionário da base de dados?")) {
+                try {
+                    await deleteDoc(doc(db, "funcionarios", matricula));
+                    await sincronizarAplicativo();
+                } catch (err) {
+                    console.error("Erro ao deletar:", err);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
