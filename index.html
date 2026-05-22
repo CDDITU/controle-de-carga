@@ -15,6 +15,8 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #f3f3f3; border-top: 2px solid #10b981; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .stat-card { transition: all 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col md:flex-row antialiased">
@@ -69,37 +71,53 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="flex-1 p-4 md:p-8 mt-16 md:mt-0 overflow-x-auto">
         
-        <!-- DASHBOARD -->
+        <!-- DASHBOARD - COM NOVOS CARDS -->
         <div id="tab-dashboard" class="tab-content space-y-7">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-emerald-100 pb-5">
                 <div><h2 class="text-3xl font-black text-slate-800">Painel de Controle</h2><p class="text-slate-500 text-sm">Movimentações acumuladas do dia</p></div>
                 <button onclick="resetarCargaDiaria()" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl text-sm font-semibold"><i class="fa-solid fa-trash-alt mr-1"></i> Zerar Dia</button>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div class="bg-white rounded-2xl shadow-sm p-5 relative">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase">Simples</span><i class="fa-solid fa-envelope text-blue-500 text-2xl"></i></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-blue-50 rounded-xl p-3 text-center"><span class="text-xs text-blue-600 uppercase">Saiu</span><span id="dash-simples-saiu" class="block text-3xl font-black text-blue-700">0</span></div>
-                        <div class="bg-slate-50 rounded-xl p-3 text-center"><span class="text-xs text-slate-500 uppercase">Resto</span><span id="dash-simples-resto" class="block text-3xl font-black text-slate-700">0</span></div>
+            <!-- Cards existentes + NOVOS CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Simples -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 stat-card relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-2xl"></div>
+                    <div class="flex justify-between items-start mb-2"><span class="text-xs font-black uppercase text-slate-400">Simples</span><i class="fa-solid fa-envelope text-blue-400 text-lg"></i></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><span class="text-xs text-slate-400">Saiu</span><span id="dash-simples-saiu" class="block text-xl font-black text-blue-600">0</span></div>
+                        <div><span class="text-xs text-slate-400">Resto</span><span id="dash-simples-resto" class="block text-xl font-black text-slate-700">0</span></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm p-5 relative">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase">Encomendas</span><i class="fa-solid fa-cubes text-amber-500 text-2xl"></i></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-amber-50 rounded-xl p-3 text-center"><span class="text-xs text-amber-600 uppercase">Saiu</span><span id="dash-encomendas-saiu" class="block text-3xl font-black text-amber-700">0</span></div>
-                        <div class="bg-slate-50 rounded-xl p-3 text-center"><span class="text-xs text-slate-500 uppercase">Resto</span><span id="dash-encomendas-resto" class="block text-3xl font-black text-slate-700">0</span></div>
+                <!-- Encomendas -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 stat-card relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-2xl"></div>
+                    <div class="flex justify-between items-start mb-2"><span class="text-xs font-black uppercase text-slate-400">Encomendas</span><i class="fa-solid fa-cubes text-amber-400 text-lg"></i></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><span class="text-xs text-slate-400">Saiu</span><span id="dash-encomendas-saiu" class="block text-xl font-black text-amber-600">0</span></div>
+                        <div><span class="text-xs text-slate-400">Resto</span><span id="dash-encomendas-resto" class="block text-xl font-black text-slate-700">0</span></div>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm p-5 relative">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase">Registrados</span><i class="fa-solid fa-box-archive text-emerald-500 text-2xl"></i></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-emerald-50 rounded-xl p-3 text-center"><span class="text-xs text-emerald-600 uppercase">Saiu</span><span id="dash-registrados-saiu" class="block text-3xl font-black text-emerald-700">0</span></div>
-                        <div class="bg-slate-50 rounded-xl p-3 text-center"><span class="text-xs text-slate-500 uppercase">Resto</span><span id="dash-registrados-resto" class="block text-3xl font-black text-slate-700">0</span></div>
+                <!-- Registrados -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 stat-card relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-2xl"></div>
+                    <div class="flex justify-between items-start mb-2"><span class="text-xs font-black uppercase text-slate-400">Registrados</span><i class="fa-solid fa-box-archive text-emerald-400 text-lg"></i></div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><span class="text-xs text-slate-400">Saiu</span><span id="dash-registrados-saiu" class="block text-xl font-black text-emerald-600">0</span></div>
+                        <div><span class="text-xs text-slate-400">Resto</span><span id="dash-registrados-resto" class="block text-xl font-black text-slate-700">0</span></div>
                     </div>
+                </div>
+                <!-- NOVO: Pré Alerta -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 stat-card relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-purple-500 rounded-l-2xl"></div>
+                    <div class="flex justify-between items-start mb-2"><span class="text-xs font-black uppercase text-slate-400">Pré Alerta</span><i class="fa-solid fa-bell text-purple-400 text-lg"></i></div>
+                    <div><span class="text-xs text-slate-400">Previsão de Chegada</span><span id="dash-pre-alerta" class="block text-2xl font-black text-purple-600">0</span></div>
+                </div>
+                <!-- NOVO: Loec Suspensa -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 stat-card relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-rose-500 rounded-l-2xl"></div>
+                    <div class="flex justify-between items-start mb-2"><span class="text-xs font-black uppercase text-slate-400">Loec Suspensa</span><i class="fa-solid fa-pause-circle text-rose-400 text-lg"></i></div>
+                    <div><span class="text-xs text-slate-400">Não saiu p/ entrega</span><span id="dash-loec-suspensa" class="block text-2xl font-black text-rose-600">0</span></div>
                 </div>
             </div>
 
@@ -134,13 +152,14 @@
             </form>
         </div>
 
-        <!-- MOVIMENTO DE CARGA ACUMULATIVO -->
+        <!-- MOVIMENTO DE CARGA - COM NOVOS CAMPOS -->
         <div id="tab-carga" class="tab-content hidden space-y-6">
             <h2 class="text-2xl font-black text-slate-800 border-b pb-4"><i class="fa-solid fa-charging-station"></i> Lançar Movimento de Carga</h2>
             <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-lg">
                 <p class="text-sm text-amber-800"><i class="fa-solid fa-info-circle"></i> Os valores serão SOMADOS aos existentes. Lançamentos múltiplos são acumulados ao longo do dia.</p>
             </div>
             <form id="form-carga" class="bg-white p-6 rounded-2xl shadow-md space-y-6">
+                <!-- Linha 1: Cards existentes -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-blue-50/60 p-5 rounded-2xl"><div class="font-bold text-blue-700 mb-4"><i class="fa-solid fa-envelope"></i> Simples</div>
                         <div><label class="text-xs uppercase">+ Adicionar à Saída</label><input type="number" id="carga-simples-saiu" min="0" value="0" class="w-full border rounded-xl p-3"></div>
@@ -158,8 +177,27 @@
                         <div class="mt-2 text-xs text-emerald-600">Atual: <span id="preview-registrados-saiu">0</span> saiu / <span id="preview-registrados-resto">0</span> resto</div>
                     </div>
                 </div>
+                
+                <!-- Linha 2: NOVOS CAMPOS - Pré Alerta e Loec Suspensa -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-purple-50/60 p-5 rounded-2xl border-2 border-purple-200">
+                        <div class="font-bold text-purple-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-bell"></i> Pré Alerta</div>
+                        <p class="text-xs text-purple-600 mb-3">Objetos encaminhados para sua unidade (previsão de chegada)</p>
+                        <div><label class="text-xs uppercase font-bold">+ Adicionar à Pré Alerta</label>
+                            <input type="number" id="carga-pre-alerta" min="0" value="0" class="w-full border-2 border-purple-200 rounded-xl p-3 text-lg font-bold"></div>
+                        <div class="mt-2 text-xs text-purple-600 bg-purple-100 p-2 rounded-lg">Atual acumulado: <span id="preview-pre-alerta" class="font-bold text-lg">0</span> objetos em pré-alerta</div>
+                    </div>
+                    <div class="bg-rose-50/60 p-5 rounded-2xl border-2 border-rose-200">
+                        <div class="font-bold text-rose-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-pause-circle"></i> Loec Suspensa</div>
+                        <p class="text-xs text-rose-600 mb-3">Objetos na unidade que não saíram para distribuição</p>
+                        <div><label class="text-xs uppercase font-bold">+ Adicionar à Loec Suspensa</label>
+                            <input type="number" id="carga-loec-suspensa" min="0" value="0" class="w-full border-2 border-rose-200 rounded-xl p-3 text-lg font-bold"></div>
+                        <div class="mt-2 text-xs text-rose-600 bg-rose-100 p-2 rounded-lg">Atual acumulado: <span id="preview-loec-suspensa" class="font-bold text-lg">0</span> objetos suspensos</div>
+                    </div>
+                </div>
+                
                 <div class="flex justify-between">
-                    <button type="button" onclick="zerarCampos()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl"><i class="fa-regular fa-eraser"></i> Limpar</button>
+                    <button type="button" onclick="zerarCampos()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl"><i class="fa-regular fa-eraser"></i> Limpar Campos</button>
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl"><i class="fa-solid fa-plus-circle"></i> Adicionar Movimento</button>
                 </div>
             </form>
@@ -177,7 +215,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="bg-slate-100 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Funcionário</th><th class="p-3">Função</th><th class="p-3">Setor Anterior</th><th class="p-3">Novo Setor</th><th class="p-3">Distrito Anterior</th><th class="p-3">Novo Distrito</th></tr></thead>
-                        <tbody id="historico-pessoal-lista"><tr><td colspan="7" class="p-6 text-center text-slate-400">Carregando...</td></tr></tbody>
+                        <tbody id="historico-pessoal-lista"><tr><td colspan="7" class="p-6 text-center text-slate-400">Carregando...</div></td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -193,8 +231,8 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-slate-100 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Tipo</th><th class="p-3">+ Saída</th><th class="p-3">+ Resto</th><th class="p-3">Usuário</th></tr></thead>
-                        <tbody id="historico-carga-lista"><tr><td colspan="5" class="p-6 text-center text-slate-400">Carregando...</td></tr></tbody>
+                        <thead class="bg-slate-100 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Tipo</th><th class="p-3">+ Saída</th><th class="p-3">+ Resto</th><th class="p-3">Valor</th><th class="p-3">Usuário</th></tr></thead>
+                        <tbody id="historico-carga-lista"><tr><td colspan="6" class="p-6 text-center text-slate-400">Carregando...</div></td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -272,7 +310,6 @@
                     dataHora: new Date().toISOString(),
                     timestamp: Date.now()
                 });
-                console.log("Histórico de alocação salvo");
             } catch(e) { console.warn("Erro ao salvar histórico pessoal:", e); }
         }
         
@@ -281,13 +318,13 @@
             const funcFilter = document.getElementById('filtro-historico-func').value;
             const setorFilter = document.getElementById('filtro-historico-setor').value;
             
-            tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center"><div class="loading-spinner mx-auto"></div>Carregando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center"><div class="loading-spinner mx-auto"></div>Carregando...</div></td></tr>';
             
             try {
                 const q = query(collection(db, "historico_alocacoes"), orderBy("timestamp", "desc"), limit(200));
                 const snapshot = await getDocs(q);
                 if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">Nenhum registro de alocação encontrado</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">Nenhum registro de alocação encontrado</div></td></tr>';
                     return;
                 }
                 let items = [];
@@ -300,7 +337,7 @@
                 });
                 
                 if (filtered.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">Nenhum registro com os filtros selecionados</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">Nenhum registro com os filtros selecionados</div></td></tr>';
                     return;
                 }
                 
@@ -320,7 +357,7 @@
             }
         }
         
-        // ========== SISTEMA DE CARGA ACUMULATIVA ==========
+        // ========== SISTEMA DE CARGA ACUMULATIVA COM NOVOS CAMPOS ==========
         async function carregarCargaAtual() {
             const docRef = doc(db, "carga_diaria", HOJE);
             const docSnap = await getDoc(docRef);
@@ -329,45 +366,52 @@
                 return {
                     simples_saiu: data.simples_saiu || 0, simples_resto: data.simples_resto || 0,
                     encomendas_saiu: data.encomendas_saiu || 0, encomendas_resto: data.encomendas_resto || 0,
-                    registrados_saiu: data.registrados_saiu || 0, registrados_resto: data.registrados_resto || 0
+                    registrados_saiu: data.registrados_saiu || 0, registrados_resto: data.registrados_resto || 0,
+                    pre_alerta: data.pre_alerta || 0,
+                    loec_suspensa: data.loec_suspensa || 0
                 };
             }
-            return { simples_saiu:0, simples_resto:0, encomendas_saiu:0, encomendas_resto:0, registrados_saiu:0, registrados_resto:0 };
+            return { 
+                simples_saiu:0, simples_resto:0, 
+                encomendas_saiu:0, encomendas_resto:0, 
+                registrados_saiu:0, registrados_resto:0,
+                pre_alerta: 0,
+                loec_suspensa: 0
+            };
         }
         
         async function atualizarPreviews() {
             const carga = await carregarCargaAtual();
+            // Previews existentes
             document.getElementById('preview-simples-saiu').innerText = carga.simples_saiu;
             document.getElementById('preview-simples-resto').innerText = carga.simples_resto;
             document.getElementById('preview-encomendas-saiu').innerText = carga.encomendas_saiu;
             document.getElementById('preview-encomendas-resto').innerText = carga.encomendas_resto;
             document.getElementById('preview-registrados-saiu').innerText = carga.registrados_saiu;
             document.getElementById('preview-registrados-resto').innerText = carga.registrados_resto;
+            // Novos previews
+            document.getElementById('preview-pre-alerta').innerText = carga.pre_alerta;
+            document.getElementById('preview-loec-suspensa').innerText = carga.loec_suspensa;
             
+            // Dashboard
             document.getElementById('dash-simples-saiu').innerText = carga.simples_saiu;
             document.getElementById('dash-simples-resto').innerText = carga.simples_resto;
             document.getElementById('dash-encomendas-saiu').innerText = carga.encomendas_saiu;
             document.getElementById('dash-encomendas-resto').innerText = carga.encomendas_resto;
             document.getElementById('dash-registrados-saiu').innerText = carga.registrados_saiu;
             document.getElementById('dash-registrados-resto').innerText = carga.registrados_resto;
+            document.getElementById('dash-pre-alerta').innerText = carga.pre_alerta;
+            document.getElementById('dash-loec-suspensa').innerText = carga.loec_suspensa;
         }
         
-        async function adicionarMovimento(tipo, saiuAdicionado, restoAdicionado) {
+        async function adicionarMovimento(tipo, valor) {
             const docRef = doc(db, "carga_diaria", HOJE);
             const docSnap = await getDoc(docRef);
             
+            if (valor === 0) return false;
+            
             let updateData = {};
-            const camposMap = {
-                'simples': { saiu: 'simples_saiu', resto: 'simples_resto' },
-                'encomendas': { saiu: 'encomendas_saiu', resto: 'encomendas_resto' },
-                'registrados': { saiu: 'registrados_saiu', resto: 'registrados_resto' }
-            };
-            
-            if (saiuAdicionado > 0) updateData[camposMap[tipo].saiu] = increment(saiuAdicionado);
-            if (restoAdicionado > 0) updateData[camposMap[tipo].resto] = increment(restoAdicionado);
-            
-            if (Object.keys(updateData).length === 0) return false;
-            
+            updateData[tipo] = increment(valor);
             updateData.ultima_atualizacao = new Date().toISOString();
             
             if (docSnap.exists()) {
@@ -377,6 +421,7 @@
                     simples_saiu: 0, simples_resto: 0,
                     encomendas_saiu: 0, encomendas_resto: 0,
                     registrados_saiu: 0, registrados_resto: 0,
+                    pre_alerta: 0, loec_suspensa: 0,
                     data: HOJE
                 };
                 Object.assign(initialData, updateData);
@@ -385,7 +430,7 @@
             
             await addDoc(collection(db, "historico_movimentos"), {
                 data: HOJE, timestamp: Date.now(), tipo: tipo,
-                saiu_adicionado: saiuAdicionado, resto_adicionado: restoAdicionado,
+                valor_adicionado: valor,
                 usuario: "Operador", dataHora: new Date().toISOString()
             });
             return true;
@@ -397,16 +442,26 @@
                 const q = query(collection(db, "historico_movimentos"), orderBy("timestamp", "desc"), limit(100));
                 const snapshot = await getDocs(q);
                 if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400">Nenhum movimento registrado</div></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-slate-400">Nenhum movimento registrado</td></tr>';
                     return;
                 }
                 tbody.innerHTML = '';
                 snapshot.forEach(doc => {
                     const m = doc.data();
-                    tbody.innerHTML += `<tr class="border-b"><td class="p-3 text-xs">${new Date(m.dataHora).toLocaleString('pt-BR')}</td><td class="p-3 font-semibold capitalize">${m.tipo}</td><td class="p-3 text-emerald-600 font-bold">+${m.saiu_adicionado || 0}</td><td class="p-3 text-blue-600 font-bold">+${m.resto_adicionado || 0}</td><td class="p-3">${m.usuario || 'Operador'}</td></tr>`;
+                    const nomeTipo = {
+                        'simples_saiu': 'Simples +Saída', 'simples_resto': 'Simples +Resto',
+                        'encomendas_saiu': 'Encomendas +Saída', 'encomendas_resto': 'Encomendas +Resto',
+                        'registrados_saiu': 'Registrados +Saída', 'registrados_resto': 'Registrados +Resto',
+                        'pre_alerta': 'Pré Alerta', 'loec_suspensa': 'Loec Suspensa'
+                    }[m.tipo] || m.tipo;
+                    tbody.innerHTML += `<tr class="border-b"><td class="p-3 text-xs">${new Date(m.dataHora).toLocaleString('pt-BR')}</td>
+                        <td class="p-3 font-semibold">${nomeTipo}</td>
+                        <td class="p-3">-</td><td class="p-3">-</td>
+                        <td class="p-3 text-emerald-600 font-bold">+${m.valor_adicionado || 0}</td>
+                        <td class="p-3">${m.usuario || 'Operador'}</td></tr>`;
                 });
             } catch(e) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Erro: ${e.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-500">Erro: ${e.message}</td></tr>`;
             }
         }
         
@@ -415,6 +470,8 @@
                 document.getElementById(`carga-${tipo}-saiu`).value = 0;
                 document.getElementById(`carga-${tipo}-resto`).value = 0;
             });
+            document.getElementById('carga-pre-alerta').value = 0;
+            document.getElementById('carga-loec-suspensa').value = 0;
         }
         
         window.resetarCargaDiaria = async function() {
@@ -423,6 +480,7 @@
                     simples_saiu: 0, simples_resto: 0,
                     encomendas_saiu: 0, encomendas_resto: 0,
                     registrados_saiu: 0, registrados_resto: 0,
+                    pre_alerta: 0, loec_suspensa: 0,
                     data: HOJE, ultima_atualizacao: new Date().toISOString()
                 });
                 showToast("Carga diária zerada!", "success");
@@ -450,7 +508,12 @@
                 const dados = docSnap.data(); 
                 cacheEquipe.push(dados); 
                 seletor.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`; 
-                tabelaCorpo.innerHTML += `<tr><td class="p-3">${dados.matricula}</td><td class="p-3 font-semibold">${dados.nome}</td><td class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-xs">${dados.funcao}</span></td><td class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500"><i class="fa-regular fa-trash-can"></i></button></td></tr>`;
+                tabelaCorpo.innerHTML += `<tr>
+                    <td class="p-3">${dados.matricula}</td>
+                    <td class="p-3 font-semibold">${dados.nome}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-xs">${dados.funcao}</span></td>
+                    <td class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500"><i class="fa-regular fa-trash-can"></i></button></td>
+                </tr>`;
             });
         }
         
@@ -473,7 +536,12 @@
             const tbody = document.getElementById('resumo-setor-funcao'); 
             tbody.innerHTML = ''; 
             for(const [funcao, vals] of Object.entries(contagem)){ 
-                tbody.innerHTML += `<tr><td class="p-3 font-semibold">${funcao}</td><td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs">${vals.postal}</span></td><td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">${vals.especial}</span></td><td class="p-3"><span class="bg-slate-100 px-2 py-1 rounded-full text-xs">${vals.interno}</span></td></tr>`;
+                tbody.innerHTML += `<tr class="border-b">
+                    <td class="p-3 font-semibold">${funcao}</td>
+                    <td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs">${vals.postal}</span></td>
+                    <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">${vals.especial}</span></td>
+                    <td class="p-3"><span class="bg-slate-100 px-2 py-1 rounded-full text-xs">${vals.interno}</span></td>
+                </tr>`;
             } 
         }
         
@@ -482,7 +550,9 @@
             const contadores = { Motorista:0, Motociclista:0, Ciclista:0, Pedestre:0, Interno:0, Gestão:0 }; 
             cacheEquipe.forEach(func => { if(contadores[func.funcao] !== undefined) contadores[func.funcao]++; }); 
             containerEfetivo.innerHTML = ''; 
-            Object.entries(contadores).forEach(([funcao,total])=>{ containerEfetivo.innerHTML+=`<div class="bg-slate-50 p-3 rounded-xl text-center"><div class="text-xs font-bold text-slate-400 uppercase">${funcao}</div><div class="text-2xl font-black">${total}</div></div>`; }); 
+            Object.entries(contadores).forEach(([funcao,total])=>{ 
+                containerEfetivo.innerHTML+=`<div class="bg-slate-50 p-3 rounded-xl text-center"><div class="text-xs font-bold text-slate-400 uppercase">${funcao}</div><div class="text-2xl font-black">${total}</div></div>`; 
+            }); 
         }
         
         // ========== EVENTOS ==========
@@ -515,27 +585,36 @@
                 dadosAntigos.tipoSetor || 'Nenhum', novoSetor, 
                 dadosAntigos.distrito || 'Interno', novoDistrito);
             
-            showToast("✅ Roteiro atualizado e registrado no histórico!", "success");
+            showToast("✅ Roteiro atualizado!", "success");
             await sincronizarAplicativo(); 
         });
         
         document.getElementById('form-carga').addEventListener('submit', async (e) => { 
             e.preventDefault(); 
+            // Campos existentes
             const simplesSaiu = parseInt(document.getElementById('carga-simples-saiu').value) || 0;
             const simplesResto = parseInt(document.getElementById('carga-simples-resto').value) || 0;
             const encomendasSaiu = parseInt(document.getElementById('carga-encomendas-saiu').value) || 0;
             const encomendasResto = parseInt(document.getElementById('carga-encomendas-resto').value) || 0;
             const registradosSaiu = parseInt(document.getElementById('carga-registrados-saiu').value) || 0;
             const registradosResto = parseInt(document.getElementById('carga-registrados-resto').value) || 0;
+            // Novos campos
+            const preAlerta = parseInt(document.getElementById('carga-pre-alerta').value) || 0;
+            const loecSuspensa = parseInt(document.getElementById('carga-loec-suspensa').value) || 0;
             
-            if (simplesSaiu > 0) await adicionarMovimento('simples', simplesSaiu, 0);
-            if (simplesResto > 0) await adicionarMovimento('simples', 0, simplesResto);
-            if (encomendasSaiu > 0) await adicionarMovimento('encomendas', encomendasSaiu, 0);
-            if (encomendasResto > 0) await adicionarMovimento('encomendas', 0, encomendasResto);
-            if (registradosSaiu > 0) await adicionarMovimento('registrados', registradosSaiu, 0);
-            if (registradosResto > 0) await adicionarMovimento('registrados', 0, registradosResto);
+            if (simplesSaiu > 0) await adicionarMovimento('simples_saiu', simplesSaiu);
+            if (simplesResto > 0) await adicionarMovimento('simples_resto', simplesResto);
+            if (encomendasSaiu > 0) await adicionarMovimento('encomendas_saiu', encomendasSaiu);
+            if (encomendasResto > 0) await adicionarMovimento('encomendas_resto', encomendasResto);
+            if (registradosSaiu > 0) await adicionarMovimento('registrados_saiu', registradosSaiu);
+            if (registradosResto > 0) await adicionarMovimento('registrados_resto', registradosResto);
+            if (preAlerta > 0) await adicionarMovimento('pre_alerta', preAlerta);
+            if (loecSuspensa > 0) await adicionarMovimento('loec_suspensa', loecSuspensa);
             
-            showToast("✅ Movimento adicionado com sucesso!", "success");
+            if (simplesSaiu > 0 || simplesResto > 0 || encomendasSaiu > 0 || encomendasResto > 0 || 
+                registradosSaiu > 0 || registradosResto > 0 || preAlerta > 0 || loecSuspensa > 0) {
+                showToast("✅ Movimento adicionado com sucesso!", "success");
+            }
             zerarCampos();
             await atualizarPreviews();
             await carregarHistoricoMovimentos();
