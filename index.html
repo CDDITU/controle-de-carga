@@ -13,53 +13,51 @@
         .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.08); }
         .tab-active { background: rgba(16, 185, 129, 0.12); color: #059669; border-left: 3px solid #10b981; font-weight: 600; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        input:focus, select:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); border-color: #10b981; outline: none; }
-        .stat-number { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
         .toast-notification { position: fixed; bottom: 20px; right: 20px; z-index: 1000; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #f3f3f3; border-top: 2px solid #10b981; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .movimento-card { transition: all 0.2s; }
+        .movimento-card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col md:flex-row antialiased">
 
-    <div id="toast" class="toast-notification hidden bg-slate-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2"></div>
+    <div id="toast" class="toast-notification hidden bg-slate-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 z-50"></div>
 
     <!-- MENU MOBILE -->
-    <div class="bg-slate-900 text-white px-5 py-3 flex justify-between items-center md:hidden w-full shadow-lg z-50 fixed top-0 left-0 backdrop-blur-sm bg-slate-900/95">
+    <div class="bg-slate-900 text-white px-5 py-3 flex justify-between items-center md:hidden w-full shadow-lg z-50 fixed top-0 left-0">
         <div class="flex items-center gap-2">
             <i class="fa-solid fa-envelope-open-text text-emerald-400 text-xl"></i>
             <h1 class="text-lg font-bold tracking-tight">SGO<span class="text-emerald-400"> Nexus</span></h1>
         </div>
-        <button onclick="toggleMobileMenu()" class="text-white text-2xl focus:outline-none">
+        <button onclick="toggleMobileMenu()" class="text-white text-2xl">
             <i id="menu-icon" class="fa-solid fa-bars"></i>
         </button>
     </div>
 
     <!-- SIDEBAR -->
-    <div id="sidebar" class="w-full md:w-72 bg-slate-900 text-slate-200 flex flex-col fixed md:sticky top-0 h-screen z-40 transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 pt-16 md:pt-0 shadow-2xl">
+    <div id="sidebar" class="w-full md:w-72 bg-slate-900 text-slate-200 flex flex-col fixed md:sticky top-0 h-screen z-40 transition-transform duration-300 transform -translate-x-full md:translate-x-0 pt-16 md:pt-0 shadow-2xl">
         <div class="flex-1 px-5 py-6">
             <div class="hidden md:flex items-center gap-3 mb-10 border-b border-slate-700/60 pb-5">
                 <div class="h-10 w-10 rounded-xl bg-emerald-500/20 flex items-center justify-center"><i class="fa-solid fa-chart-line text-emerald-400 text-xl"></i></div>
-                <div><h1 class="text-xl font-black tracking-tight">SGO<span class="text-emerald-400"> Nexus</span></h1><p class="text-[11px] text-slate-400">Unidade Operacional</p></div>
+                <div><h1 class="text-xl font-black">SGO<span class="text-emerald-400"> Nexus</span></h1><p class="text-[11px] text-slate-400">Unidade Operacional</p></div>
             </div>
             <nav class="space-y-1.5">
-                <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-dashboard">
-                    <i class="fa-solid fa-chart-pie w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span class="font-medium">Dashboard</span>
+                <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition text-slate-300 hover:bg-slate-800/70" id="btn-dashboard">
+                    <i class="fa-solid fa-chart-pie w-5 text-emerald-400/70"></i> <span>Dashboard</span>
                 </button>
-                <button onclick="switchTab('funcionarios')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-funcionarios">
-                    <i class="fa-solid fa-users w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Equipe & Cadastro</span>
+                <button onclick="switchTab('funcionarios')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition text-slate-300 hover:bg-slate-800/70" id="btn-funcionarios">
+                    <i class="fa-solid fa-users w-5 text-emerald-400/70"></i> <span>Equipe & Cadastro</span>
                 </button>
-                <button onclick="switchTab('alocacao')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-alocacao">
-                    <i class="fa-solid fa-map-location-dot w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Alocar Distritos</span>
+                <button onclick="switchTab('alocacao')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition text-slate-300 hover:bg-slate-800/70" id="btn-alocacao">
+                    <i class="fa-solid fa-map-location-dot w-5 text-emerald-400/70"></i> <span>Alocar Distritos</span>
                 </button>
-                <button onclick="switchTab('historico')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-historico">
-                    <i class="fa-solid fa-clock-rotate-left w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Histórico de Alocações</span>
+                <button onclick="switchTab('carga')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition text-slate-300 hover:bg-slate-800/70" id="btn-carga">
+                    <i class="fa-solid fa-box-open w-5 text-emerald-400/70"></i> <span>Movimento de Carga</span>
                 </button>
-                <button onclick="switchTab('carga')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-carga">
-                    <i class="fa-solid fa-box-open w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Movimento de Carga</span>
+                <button onclick="switchTab('movimentos')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition text-slate-300 hover:bg-slate-800/70" id="btn-movimentos">
+                    <i class="fa-solid fa-history w-5 text-emerald-400/70"></i> <span>Histórico de Movimentos</span>
                 </button>
             </nav>
         </div>
@@ -75,70 +73,151 @@
         <!-- DASHBOARD -->
         <div id="tab-dashboard" class="tab-content space-y-7">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-emerald-100 pb-5">
-                <div><h2 class="text-3xl font-black tracking-tight bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Painel de Controle</h2><p class="text-slate-500 text-sm mt-1">Visão executiva de produtividade e alocação</p></div>
-                <span class="bg-white/80 backdrop-blur-sm text-slate-700 px-4 py-1.5 rounded-full text-xs font-semibold shadow-sm border border-emerald-200"><i class="fa-regular fa-clock mr-1"></i> Tempo real</span>
+                <div><h2 class="text-3xl font-black tracking-tight bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Painel de Controle</h2><p class="text-slate-500 text-sm">Movimentações acumuladas do dia</p></div>
+                <button onclick="resetarCargaDiaria()" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl text-sm font-semibold transition"><i class="fa-solid fa-trash-alt mr-1"></i> Zerar Dia</button>
             </div>
             
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-chart-simple text-emerald-500"></i> Balanço de Objetos Postais (Hoje)</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-2xl"></div><div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Simples</span><i class="fa-solid fa-envelope text-blue-500 text-2xl bg-blue-50 p-2 rounded-xl"></i></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-simples-saiu" class="stat-number block text-2xl font-black text-blue-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-simples-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div></div>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-2xl"></div><div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Encomendas</span><i class="fa-solid fa-cubes text-amber-500 text-2xl bg-amber-50 p-2 rounded-xl"></i></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-encomendas-saiu" class="stat-number block text-2xl font-black text-amber-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-encomendas-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div></div>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-2xl"></div><div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Registrados</span><i class="fa-solid fa-box-archive text-emerald-500 text-2xl bg-emerald-50 p-2 rounded-xl"></i></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-registrados-saiu" class="stat-number block text-2xl font-black text-emerald-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-registrados-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div></div>
+                <!-- Simples -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Objetos Simples</span><i class="fa-solid fa-envelope text-blue-500 text-2xl bg-blue-50 p-2 rounded-xl"></i></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 rounded-xl p-3 text-center"><span class="text-xs text-blue-600 uppercase font-bold">Saiu</span><span id="dash-simples-saiu" class="stat-number block text-3xl font-black text-blue-700">0</span></div>
+                        <div class="bg-slate-50 rounded-xl p-3 text-center"><span class="text-xs text-slate-500 uppercase font-bold">Resto</span><span id="dash-simples-resto" class="stat-number block text-3xl font-black text-slate-700">0</span></div>
+                    </div>
+                    <div class="mt-3 text-xs text-center text-slate-400"><i class="fa-regular fa-clock"></i> Última atualização: <span id="simples-ultima">--</span></div>
+                </div>
+                <!-- Encomendas -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Encomendas</span><i class="fa-solid fa-cubes text-amber-500 text-2xl bg-amber-50 p-2 rounded-xl"></i></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-amber-50 rounded-xl p-3 text-center"><span class="text-xs text-amber-600 uppercase font-bold">Saiu</span><span id="dash-encomendas-saiu" class="stat-number block text-3xl font-black text-amber-700">0</span></div>
+                        <div class="bg-slate-50 rounded-xl p-3 text-center"><span class="text-xs text-slate-500 uppercase font-bold">Resto</span><span id="dash-encomendas-resto" class="stat-number block text-3xl font-black text-slate-700">0</span></div>
+                    </div>
+                    <div class="mt-3 text-xs text-center text-slate-400"><i class="fa-regular fa-clock"></i> Última atualização: <span id="encomendas-ultima">--</span></div>
+                </div>
+                <!-- Registrados -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Registrados</span><i class="fa-solid fa-box-archive text-emerald-500 text-2xl bg-emerald-50 p-2 rounded-xl"></i></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-emerald-50 rounded-xl p-3 text-center"><span class="text-xs text-emerald-600 uppercase font-bold">Saiu</span><span id="dash-registrados-saiu" class="stat-number block text-3xl font-black text-emerald-700">0</span></div>
+                        <div class="bg-slate-50 rounded-xl p-3 text-center"><span class="text-xs text-slate-500 uppercase font-bold">Resto</span><span id="dash-registrados-resto" class="stat-number block text-3xl font-black text-slate-700">0</span></div>
+                    </div>
+                    <div class="mt-3 text-xs text-center text-slate-400"><i class="fa-regular fa-clock"></i> Última atualização: <span id="registrados-ultima">--</span></div>
+                </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
                 <h3 class="text-sm font-bold text-slate-500 uppercase flex items-center gap-2 mb-5"><i class="fa-solid fa-chart-pie text-emerald-500"></i> Distribuição de Efetivo por Função e Setor</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead class="bg-slate-100 text-slate-600"><tr><th class="p-3 text-left">Função</th><th class="p-3 text-left">Setor Postal (601-624)</th><th class="p-3 text-left">Setor Especial (301-334)</th><th class="p-3 text-left">Unidade Interna</th></tr></thead>
-                        <tbody id="resumo-setor-funcao" class="divide-y"></tbody>
-                    </table>
-                </div>
+                <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-slate-100 text-slate-600"><tr><th class="p-3">Função</th><th class="p-3">Setor Postal</th><th class="p-3">Setor Especial</th><th class="p-3">Unidade Interna</th></tr></thead><tbody id="resumo-setor-funcao"></tbody></table></div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"><h3 class="text-sm font-bold text-slate-500 uppercase flex items-center gap-2 mb-5"><i class="fa-solid fa-briefcase"></i> Efetivo Alocado em Roteiros</h3><div id="dash-efetivo-lista" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div></div>
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"><div class="p-5 bg-slate-50/80 border-b border-slate-100 flex justify-between items-center"><h3 class="font-bold text-slate-700"><i class="fa-regular fa-map mr-2 text-emerald-500"></i>Espelho Operacional da Equipe</h3></div><div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="bg-slate-100 text-slate-500 text-xs uppercase"><th class="p-4">Funcionário</th><th class="p-4">Função</th><th class="p-4">Setor</th><th class="p-4">Distrito</th></tr></thead><tbody id="dash-tabela-distribuicao"></tbody></table></div></div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"><h3 class="text-sm font-bold text-slate-500 uppercase mb-5"><i class="fa-solid fa-briefcase"></i> Efetivo Alocado</h3><div id="dash-efetivo-lista" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div></div>
         </div>
 
         <!-- MÓDULO CADASTRO -->
-        <div id="tab-funcionarios" class="tab-content hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4 flex items-center gap-2"><i class="fa-solid fa-user-plus text-emerald-600"></i> Cadastro Geral de Equipe</h2>
-            <form id="form-funcionario" class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end"><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5">Nome Completo</label><input type="text" id="func-nome" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5">Matrícula</label><input type="text" id="func-matricula" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5">Função</label><select id="func-funcao" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"><option value="Motorista">Motorista</option><option value="Motociclista">Motociclista</option><option value="Ciclista">Ciclista</option><option value="Pedestre">Pedestre</option><option value="Interno">Interno</option><option value="Gestão">Gestão</option></select></div><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"><i class="fa-solid fa-save"></i> Salvar</button></form>
-            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden"><div class="p-4 bg-slate-50 border-b font-bold text-slate-700"><i class="fa-regular fa-clipboard mr-2"></i>Efetivo Cadastrado</div><div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-100 text-slate-600 text-xs"><tr><th class="p-3">Matrícula</th><th class="p-3">Nome</th><th class="p-3">Função</th><th class="p-3 text-center">Ações</th></tr></thead><tbody id="lista-funcionarios-corpo"></tbody></table></div></div>
+        <div id="tab-funcionarios" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-user-plus text-emerald-600"></i> Cadastro Geral de Equipe</h2>
+            <form id="form-funcionario" class="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
+                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Nome</label><input type="text" id="func-nome" required class="w-full border rounded-xl p-2.5 bg-gray-50"></div>
+                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Matrícula</label><input type="text" id="func-matricula" required class="w-full border rounded-xl p-2.5 bg-gray-50"></div>
+                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Função</label><select id="func-funcao" class="w-full border rounded-xl p-2.5"><option value="Motorista">Motorista</option><option value="Motociclista">Motociclista</option><option value="Ciclista">Ciclista</option><option value="Pedestre">Pedestre</option><option value="Interno">Interno</option><option value="Gestão">Gestão</option></select></div>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition flex items-center justify-center gap-2"><i class="fa-solid fa-save"></i> Salvar</button>
+            </form>
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden"><div class="p-4 bg-slate-50 border-b font-bold">Efetivo Cadastrado</div><div class="overflow-x-auto"><table class="w-full"><thead class="bg-slate-100 text-slate-600 text-xs"><tr><th class="p-3">Matrícula</th><th class="p-3">Nome</th><th class="p-3">Função</th><th class="p-3 text-center">Ações</th></tr></thead><tbody id="lista-funcionarios-corpo"></tbody></table></div></div>
         </div>
 
         <!-- ALOCAÇÃO DE DISTRITOS -->
-        <div id="tab-alocacao" class="tab-content hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-route text-emerald-600 mr-2"></i> Gerenciamento Fixo de Linhas</h2>
-            <form id="form-alocacao" class="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end"><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Agente</label><select id="alocacao-func" required class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Setor Alvo</label><select id="alocacao-tipo" onchange="atualizarSeletorDistritos()" class="w-full border rounded-xl p-2.5"><option value="especial">Especial (301-334)</option><option value="postal">Postal (601-624)</option><option value="Nenhum">Nenhum (Unidade)</option></select></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Distrito</label><select id="alocacao-distrito" class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition flex items-center justify-center gap-2"><i class="fa-solid fa-location-dot"></i> Atualizar Roteiro</button></form>
+        <div id="tab-alocacao" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-route text-emerald-600 mr-2"></i> Alocar Distritos</h2>
+            <form id="form-alocacao" class="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
+                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Agente</label><select id="alocacao-func" required class="w-full border rounded-xl p-2.5"></select></div>
+                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Setor</label><select id="alocacao-tipo" onchange="atualizarSeletorDistritos()" class="w-full border rounded-xl p-2.5"><option value="especial">Especial (301-334)</option><option value="postal">Postal (601-624)</option><option value="Nenhum">Unidade Interna</option></select></div>
+                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Distrito</label><select id="alocacao-distrito" class="w-full border rounded-xl p-2.5"></select></div>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition"><i class="fa-solid fa-location-dot"></i> Atualizar</button>
+            </form>
         </div>
 
-        <!-- HISTÓRICO DE ALOCAÇÕES - AGORA COM FIREBASE! -->
-        <div id="tab-historico" class="tab-content hidden space-y-6">
-            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Histórico de Mudanças de Distritos</h2>
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Filtrar por Funcionário</label><select id="filtro-historico-func" class="w-full border rounded-xl p-2.5 bg-gray-50"><option value="">Todos os funcionários</option></select></div>
-                    <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Filtrar por Setor</label><select id="filtro-historico-setor" class="w-full border rounded-xl p-2.5 bg-gray-50"><option value="">Todos</option><option value="postal">Postal (601-624)</option><option value="especial">Especial (301-334)</option><option value="Nenhum">Unidade Interna</option></select></div>
-                    <div><button id="btn-limpar-filtros" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition w-full"><i class="fa-regular fa-filter-circle-xmark mr-1"></i> Limpar Filtros</button></div>
-                    <div><button id="btn-atualizar-historico" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2.5 px-4 rounded-xl transition w-full"><i class="fa-solid fa-rotate-right mr-1"></i> Atualizar</button></div>
+        <!-- MOVIMENTO DE CARGA - VERSÃO ACUMULATIVA -->
+        <div id="tab-carga" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-charging-station"></i> Lançar Movimento de Carga</h2>
+            
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-lg mb-4">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-info-circle text-amber-600"></i><span class="text-sm font-medium text-amber-800">Lançamento Acumulativo</span></div>
+                <p class="text-xs text-amber-700 mt-1">Os valores informados serão SOMADOS aos existentes. Para adicionar mais objetos ao longo do dia, basta lançar novamente com os valores adicionais.</p>
+            </div>
+
+            <form id="form-carga" class="bg-white p-6 rounded-2xl shadow-md space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Simples -->
+                    <div class="bg-blue-50/60 p-5 rounded-2xl border border-blue-100">
+                        <div class="flex items-center gap-2 text-blue-700 font-bold mb-4"><i class="fa-solid fa-envelope"></i> Objetos Simples</div>
+                        <div class="space-y-3">
+                            <div><label class="text-xs font-semibold uppercase text-blue-600">+ Adicionar à Saída</label><input type="number" id="carga-simples-saiu" min="0" value="0" class="w-full border rounded-xl p-3 text-lg font-bold"></div>
+                            <div><label class="text-xs font-semibold uppercase text-blue-600">+ Adicionar ao Resto</label><input type="number" id="carga-simples-resto" min="0" value="0" class="w-full border rounded-xl p-3 text-lg font-bold"></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-blue-200 text-xs text-blue-600"><i class="fa-regular fa-chart-line"></i> Atual: <span id="preview-simples-saiu">0</span> saiu / <span id="preview-simples-resto">0</span> resto</div>
+                    </div>
+                    <!-- Encomendas -->
+                    <div class="bg-amber-50/60 p-5 rounded-2xl border border-amber-100">
+                        <div class="flex items-center gap-2 text-amber-700 font-bold mb-4"><i class="fa-solid fa-cubes"></i> Encomendas</div>
+                        <div class="space-y-3">
+                            <div><label class="text-xs font-semibold uppercase text-amber-600">+ Adicionar à Saída</label><input type="number" id="carga-encomendas-saiu" min="0" value="0" class="w-full border rounded-xl p-3 text-lg font-bold"></div>
+                            <div><label class="text-xs font-semibold uppercase text-amber-600">+ Adicionar ao Resto</label><input type="number" id="carga-encomendas-resto" min="0" value="0" class="w-full border rounded-xl p-3 text-lg font-bold"></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-amber-200 text-xs text-amber-600"><i class="fa-regular fa-chart-line"></i> Atual: <span id="preview-encomendas-saiu">0</span> saiu / <span id="preview-encomendas-resto">0</span> resto</div>
+                    </div>
+                    <!-- Registrados -->
+                    <div class="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-100">
+                        <div class="flex items-center gap-2 text-emerald-700 font-bold mb-4"><i class="fa-solid fa-box-archive"></i> Registrados</div>
+                        <div class="space-y-3">
+                            <div><label class="text-xs font-semibold uppercase text-emerald-600">+ Adicionar à Saída</label><input type="number" id="carga-registrados-saiu" min="0" value="0" class="w-full border rounded-xl p-3 text-lg font-bold"></div>
+                            <div><label class="text-xs font-semibold uppercase text-emerald-600">+ Adicionar ao Resto</label><input type="number" id="carga-registrados-resto" min="0" value="0" class="w-full border rounded-xl p-3 text-lg font-bold"></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-emerald-200 text-xs text-emerald-600"><i class="fa-regular fa-chart-line"></i> Atual: <span id="preview-registrados-saiu">0</span> saiu / <span id="preview-registrados-resto">0</span> resto</div>
+                    </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Funcionário</th><th class="p-3">Função</th><th class="p-3">Setor Anterior</th><th class="p-3">Novo Setor</th><th class="p-3">Distrito Anterior</th><th class="p-3">Novo Distrito</th></tr></thead>
-                        <tbody id="historico-lista-tbody"><tr><td colspan="7" class="p-6 text-center text-slate-400"><div class="loading-spinner mx-auto mb-2"></div>Carregando histórico do Firebase...</div></td></tr></tbody>
-                    </table>
+                <div class="flex justify-between gap-3">
+                    <button type="button" onclick="zerarCampos()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-6 rounded-xl transition"><i class="fa-regular fa-eraser"></i> Limpar Campos</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> Adicionar Movimento</button>
+                </div>
+            </form>
+
+            <!-- Resumo Rápido -->
+            <div class="bg-white rounded-2xl shadow-sm p-5">
+                <h3 class="font-bold text-slate-700 mb-3"><i class="fa-regular fa-chart-bar text-emerald-500"></i> Resumo Acumulado de Hoje</h3>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div><div class="text-xs text-slate-400">Simples</div><div class="font-bold text-blue-600"><span id="resumo-simples-total">0</span> total</div><div class="text-xs">(S: <span id="resumo-simples-saiu">0</span> | R: <span id="resumo-simples-resto">0</span>)</div></div>
+                    <div><div class="text-xs text-slate-400">Encomendas</div><div class="font-bold text-amber-600"><span id="resumo-encomendas-total">0</span> total</div><div class="text-xs">(S: <span id="resumo-encomendas-saiu">0</span> | R: <span id="resumo-encomendas-resto">0</span>)</div></div>
+                    <div><div class="text-xs text-slate-400">Registrados</div><div class="font-bold text-emerald-600"><span id="resumo-registrados-total">0</span> total</div><div class="text-xs">(S: <span id="resumo-registrados-saiu">0</span> | R: <span id="resumo-registrados-resto">0</span>)</div></div>
                 </div>
             </div>
         </div>
 
-        <!-- MOVIMENTO DE CARGA -->
-        <div id="tab-carga" class="tab-content hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-charging-station"></i> Movimento de Carga Diária</h2>
-            <form id="form-carga" class="bg-white p-6 rounded-2xl shadow-md space-y-6"><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="bg-blue-50/60 p-5 rounded-2xl border border-blue-100"><div class="flex items-center gap-2 text-blue-700 font-bold mb-3"><i class="fa-solid fa-envelope"></i> Objetos Simples</div><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-simples-saiu" min="0" class="w-full border rounded-xl p-2"></div><div class="mt-2"><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-simples-resto" min="0" class="w-full border rounded-xl p-2"></div></div><div class="bg-amber-50/60 p-5 rounded-2xl border border-amber-100"><div class="flex items-center gap-2 text-amber-700 font-bold mb-3"><i class="fa-solid fa-cubes"></i> Encomendas</div><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-encomendas-saiu" min="0" class="w-full border rounded-xl p-2"></div><div class="mt-2"><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-encomendas-resto" min="0" class="w-full border rounded-xl p-2"></div></div><div class="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-100"><div class="flex items-center gap-2 text-emerald-700 font-bold mb-3"><i class="fa-solid fa-box-archive"></i> Registrados</div><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-registrados-saiu" min="0" class="w-full border rounded-xl p-2"></div><div class="mt-2"><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-registrados-resto" min="0" class="w-full border rounded-xl p-2"></div></div></div><div class="flex justify-end"><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Gravar Carga</button></div></form>
+        <!-- HISTÓRICO DE MOVIMENTOS -->
+        <div id="tab-movimentos" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-history text-emerald-600"></i> Histórico de Lançamentos de Carga</h2>
+            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
+                    <span class="font-bold text-slate-700"><i class="fa-regular fa-clock mr-2"></i>Últimos 100 movimentos</span>
+                    <button onclick="carregarHistoricoMovimentos()" class="text-emerald-600 hover:text-emerald-700 text-sm"><i class="fa-solid fa-rotate-right"></i> Atualizar</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Tipo</th><th class="p-3">Saída Adicionada</th><th class="p-3">Resto Adicionado</th><th class="p-3">Usuário</th></tr></thead>
+                        <tbody id="historico-movimentos-lista"><tr><td colspan="5" class="p-6 text-center text-slate-400">Carregando...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc, getDoc, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc, getDoc, addDoc, query, orderBy, limit, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         const firebaseConfig = { 
             apiKey: "AIzaSyA9rmTKGWXzq-wEr3SImGLmKQyEjvpHyHw", 
@@ -151,15 +230,13 @@
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        
         const HOJE = new Date().toISOString().split('T')[0];
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR');
         let cacheEquipe = [];
         
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
-            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
-            toast.innerHTML = `<i class="fa-solid ${icon} mr-2"></i> ${message}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} mr-2"></i> ${message}`;
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 3000);
         }
@@ -178,158 +255,193 @@
         
         window.switchTab = function(tabName) { 
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden')); 
-            document.querySelectorAll('.tab-btn').forEach(el => { 
-                el.classList.remove('tab-active', 'bg-slate-800/40', 'text-white'); 
-                el.classList.add('text-slate-300'); 
-            }); 
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('tab-active', 'bg-slate-800/40')); 
             document.getElementById(`tab-${tabName}`).classList.remove('hidden'); 
-            const activeBtn = document.getElementById(`btn-${tabName}`); 
-            if(activeBtn) activeBtn.classList.add('tab-active', 'bg-slate-800/40', 'text-white'); 
+            document.getElementById(`btn-${tabName}`)?.classList.add('tab-active', 'bg-slate-800/40'); 
             if(window.innerWidth < 768) toggleMobileMenu(); 
-            if(tabName === 'historico') carregarHistoricoFirebase(); 
+            if(tabName === 'movimentos') carregarHistoricoMovimentos();
+            if(tabName === 'carga') atualizarPreviews();
         }
         
         window.atualizarSeletorDistritos = function() { 
             const tipo = document.getElementById('alocacao-tipo').value; 
             const seletor = document.getElementById('alocacao-distrito'); 
             seletor.innerHTML = ''; 
-            if(tipo === 'especial') { 
-                seletor.disabled=false; 
-                for(let i=301;i<=334;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; 
-            } else if(tipo === 'postal') { 
-                seletor.disabled=false; 
-                for(let i=601;i<=624;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; 
-            } else { 
-                seletor.innerHTML='<option value="Interno">Não se aplica</option>'; 
-                seletor.disabled=true; 
-            } 
+            if(tipo === 'especial') { for(let i=301;i<=334;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; seletor.disabled=false; }
+            else if(tipo === 'postal') { for(let i=601;i<=624;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; seletor.disabled=false; }
+            else { seletor.innerHTML='<option value="Interno">Não se aplica</option>'; seletor.disabled=true; }
         }
         
-        // ========== FUNÇÃO PARA SALVAR HISTÓRICO NO FIREBASE ==========
-        async function salvarHistoricoFirebase(matricula, nome, funcao, setorAntigo, setorNovo, distritoAntigo, distritoNovo) {
-            if (setorAntigo === setorNovo && distritoAntigo === distritoNovo) return null;
+        // ========== SISTEMA DE CARGA ACUMULATIVA ==========
+        async function carregarCargaAtual() {
+            const docRef = doc(db, "carga_diaria", HOJE);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                return {
+                    simples_saiu: data.simples_saiu || 0,
+                    simples_resto: data.simples_resto || 0,
+                    encomendas_saiu: data.encomendas_saiu || 0,
+                    encomendas_resto: data.encomendas_resto || 0,
+                    registrados_saiu: data.registrados_saiu || 0,
+                    registrados_resto: data.registrados_resto || 0,
+                    ultima_atualizacao: data.ultima_atualizacao || null
+                };
+            }
+            return {
+                simples_saiu: 0, simples_resto: 0,
+                encomendas_saiu: 0, encomendas_resto: 0,
+                registrados_saiu: 0, registrados_resto: 0,
+                ultima_atualizacao: null
+            };
+        }
+        
+        async function atualizarPreviews() {
+            const carga = await carregarCargaAtual();
+            document.getElementById('preview-simples-saiu').innerText = carga.simples_saiu;
+            document.getElementById('preview-simples-resto').innerText = carga.simples_resto;
+            document.getElementById('preview-encomendas-saiu').innerText = carga.encomendas_saiu;
+            document.getElementById('preview-encomendas-resto').innerText = carga.encomendas_resto;
+            document.getElementById('preview-registrados-saiu').innerText = carga.registrados_saiu;
+            document.getElementById('preview-registrados-resto').innerText = carga.registrados_resto;
             
-            const registro = {
-                matricula,
-                nome,
-                funcao,
-                setorAntigo: setorAntigo || 'Nenhum',
-                setorNovo: setorNovo || 'Nenhum',
-                distritoAntigo: distritoAntigo || 'Interno',
-                distritoNovo: distritoNovo || 'Interno',
-                dataHora: new Date().toISOString(),
-                timestamp: Date.now()
+            // Atualizar resumo
+            document.getElementById('resumo-simples-saiu').innerText = carga.simples_saiu;
+            document.getElementById('resumo-simples-resto').innerText = carga.simples_resto;
+            document.getElementById('resumo-simples-total').innerText = carga.simples_saiu + carga.simples_resto;
+            document.getElementById('resumo-encomendas-saiu').innerText = carga.encomendas_saiu;
+            document.getElementById('resumo-encomendas-resto').innerText = carga.encomendas_resto;
+            document.getElementById('resumo-encomendas-total').innerText = carga.encomendas_saiu + carga.encomendas_resto;
+            document.getElementById('resumo-registrados-saiu').innerText = carga.registrados_saiu;
+            document.getElementById('resumo-registrados-resto').innerText = carga.registrados_resto;
+            document.getElementById('resumo-registrados-total').innerText = carga.registrados_saiu + carga.registrados_resto;
+            
+            // Dashboard
+            document.getElementById('dash-simples-saiu').innerText = carga.simples_saiu;
+            document.getElementById('dash-simples-resto').innerText = carga.simples_resto;
+            document.getElementById('dash-encomendas-saiu').innerText = carga.encomendas_saiu;
+            document.getElementById('dash-encomendas-resto').innerText = carga.encomendas_resto;
+            document.getElementById('dash-registrados-saiu').innerText = carga.registrados_saiu;
+            document.getElementById('dash-registrados-resto').innerText = carga.registrados_resto;
+            
+            if (carga.ultima_atualizacao) {
+                const data = new Date(carga.ultima_atualizacao);
+                const horaStr = data.toLocaleTimeString('pt-BR');
+                document.getElementById('simples-ultima').innerText = horaStr;
+                document.getElementById('encomendas-ultima').innerText = horaStr;
+                document.getElementById('registrados-ultima').innerText = horaStr;
+            }
+        }
+        
+        async function adicionarMovimento(tipo, saiuAdicionado, restoAdicionado) {
+            const docRef = doc(db, "carga_diaria", HOJE);
+            const docSnap = await getDoc(docRef);
+            
+            let updateData = {};
+            let camposMap = {
+                'simples': { saiu: 'simples_saiu', resto: 'simples_resto' },
+                'encomendas': { saiu: 'encomendas_saiu', resto: 'encomendas_resto' },
+                'registrados': { saiu: 'registrados_saiu', resto: 'registrados_resto' }
             };
             
-            try {
-                // Adiciona documento à coleção historico_alocacoes
-                const docRef = await addDoc(collection(db, "historico_alocacoes"), registro);
-                console.log("Histórico salvo no Firebase com ID:", docRef.id);
-                showToast("✅ Histórico registrado no banco de dados!", "success");
-                return docRef.id;
-            } catch (error) {
-                console.error("Erro ao salvar histórico no Firebase:", error);
-                showToast("⚠️ Erro ao salvar histórico: " + error.message, "error");
-                return null;
-            }
-        }
-        
-        // ========== FUNÇÃO PARA CARREGAR HISTÓRICO DO FIREBASE ==========
-        async function carregarHistoricoFirebase() {
-            const tbody = document.getElementById('historico-lista-tbody');
-            const funcFilter = document.getElementById('filtro-historico-func').value;
-            const setorFilter = document.getElementById('filtro-historico-setor').value;
+            if (saiuAdicionado > 0) updateData[camposMap[tipo].saiu] = increment(saiuAdicionado);
+            if (restoAdicionado > 0) updateData[camposMap[tipo].resto] = increment(restoAdicionado);
             
-            tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center"><div class="loading-spinner mx-auto mb-2"></div>Carregando histórico do Firebase...</div></td></tr>';
+            if (Object.keys(updateData).length === 0) return false;
             
-            try {
-                const q = query(collection(db, "historico_alocacoes"), orderBy("timestamp", "desc"), limit(500));
-                const snapshot = await getDocs(q);
-                
-                if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400"><i class="fa-regular fa-folder-open mr-2"></i>Nenhum registro de histórico encontrado. Faça uma alocação para começar.</div></td></tr>';
-                    return;
-                }
-                
-                let items = [];
-                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                
-                let filtered = items.filter(item => {
-                    let matchFunc = !funcFilter || item.matricula === funcFilter;
-                    let matchSetor = !setorFilter || item.setorNovo === setorFilter;
-                    return matchFunc && matchSetor;
-                });
-                
-                if (filtered.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400"><i class="fa-regular fa-filter-circle-xmark mr-2"></i>Nenhum registro encontrado com os filtros selecionados.</div></td></tr>';
-                    return;
-                }
-                
-                tbody.innerHTML = filtered.map(item => `
-                    <tr class="border-b hover:bg-slate-50 transition">
-                        <td class="p-3 text-xs text-slate-500 font-mono">${new Date(item.dataHora).toLocaleString('pt-BR')}</td>
-                        <td class="p-3 font-semibold text-slate-700">${item.nome || 'N/A'}</td>
-                        <td class="p-3 text-slate-600">${item.funcao || 'N/A'}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs">${item.setorAntigo || 'Nenhum'}</span></td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">${item.setorNovo || 'Nenhum'}</span></td>
-                        <td class="p-3 font-mono text-xs text-slate-500">${item.distritoAntigo || 'Interno'}</td>
-                        <td class="p-3 font-mono text-xs font-bold text-emerald-600">${item.distritoNovo || 'Interno'}</td>
-                    </tr>
-                `).join('');
-                
-            } catch (error) {
-                console.error("Erro ao carregar histórico do Firebase:", error);
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Erro ao carregar histórico: ${error.message}<br><span class="text-xs">Verifique as regras do Firebase para a coleção 'historico_alocacoes'</span></div></td></tr>`;
+            updateData.ultima_atualizacao = new Date().toISOString();
+            
+            if (docSnap.exists()) {
+                await updateDoc(docRef, updateData);
+            } else {
+                const initialData = {
+                    simples_saiu: 0, simples_resto: 0,
+                    encomendas_saiu: 0, encomendas_resto: 0,
+                    registrados_saiu: 0, registrados_resto: 0,
+                    data: HOJE,
+                    ultima_atualizacao: new Date().toISOString()
+                };
+                Object.assign(initialData, updateData);
+                await setDoc(docRef, initialData);
             }
-        }
-        
-        async function preencherFiltroHistorico() { 
-            const select = document.getElementById('filtro-historico-func'); 
-            select.innerHTML = '<option value="">Todos os funcionários</option>'; 
-            cacheEquipe.forEach(func => { 
-                select.innerHTML += `<option value="${func.matricula}">${func.nome} (${func.funcao})</option>`; 
+            
+            // Registrar no histórico de movimentos
+            await addDoc(collection(db, "historico_movimentos"), {
+                data: HOJE,
+                timestamp: Date.now(),
+                tipo: tipo,
+                saiu_adicionado: saiuAdicionado,
+                resto_adicionado: restoAdicionado,
+                usuario: "Operador",
+                dataHora: new Date().toISOString()
             });
+            
+            return true;
         }
         
+        async function carregarHistoricoMovimentos() {
+            const tbody = document.getElementById('historico-movimentos-lista');
+            try {
+                const q = query(collection(db, "historico_movimentos"), orderBy("timestamp", "desc"), limit(100));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400">Nenhum movimento registrado ainda</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const m = doc.data();
+                    tbody.innerHTML += `<tr class="border-b hover:bg-slate-50"><td class="p-3 text-xs text-slate-500">${new Date(m.dataHora).toLocaleString('pt-BR')}</td><td class="p-3 font-semibold capitalize">${m.tipo}</td><td class="p-3 text-emerald-600 font-bold">+${m.saiu_adicionado || 0}</td><td class="p-3 text-blue-600 font-bold">+${m.resto_adicionado || 0}</td><td class="p-3 text-slate-500">${m.usuario || 'Operador'}</td></tr>`;
+                });
+            } catch(e) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500">Erro ao carregar: ${e.message}</td></tr>`;
+            }
+        }
+        
+        window.zerarCampos = function() {
+            document.getElementById('carga-simples-saiu').value = 0;
+            document.getElementById('carga-simples-resto').value = 0;
+            document.getElementById('carga-encomendas-saiu').value = 0;
+            document.getElementById('carga-encomendas-resto').value = 0;
+            document.getElementById('carga-registrados-saiu').value = 0;
+            document.getElementById('carga-registrados-resto').value = 0;
+        }
+        
+        window.resetarCargaDiaria = async function() {
+            if (confirm("⚠️ ATENÇÃO: Isso irá ZERAR toda a movimentação de carga do dia. Esta ação não pode ser desfeita. Confirmar?")) {
+                await setDoc(doc(db, "carga_diaria", HOJE), {
+                    simples_saiu: 0, simples_resto: 0,
+                    encomendas_saiu: 0, encomendas_resto: 0,
+                    registrados_saiu: 0, registrados_resto: 0,
+                    data: HOJE,
+                    ultima_atualizacao: new Date().toISOString()
+                });
+                showToast("Carga diária zerada com sucesso!", "success");
+                await atualizarPreviews();
+            }
+        }
+        
+        // ========== RESTANTE DO SISTEMA (FUNCIONÁRIOS, ALOCAÇÃO, ETC) ==========
         async function sincronizarAplicativo() { 
             await buscarEquipe(); 
-            await carregarCargaDoDia(); 
+            await atualizarPreviews();
             renderizarDashboard(); 
             atualizarResumoSetorFuncao(); 
-            await preencherFiltroHistorico(); 
         }
         
         async function buscarEquipe() { 
-            try {
-                const snapshot = await getDocs(collection(db, "funcionarios")); 
-                cacheEquipe = []; 
-                const seletor = document.getElementById('alocacao-func'); 
-                const tabelaCorpo = document.getElementById('lista-funcionarios-corpo'); 
-                seletor.innerHTML = '<option value="">Selecione agente...</option>'; 
-                tabelaCorpo.innerHTML = ''; 
-                snapshot.forEach((docSnap) => { 
-                    const dados = docSnap.data(); 
-                    cacheEquipe.push(dados); 
-                    seletor.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`; 
-                    tabelaCorpo.innerHTML += `<tr><td data-label="Matrícula" class="p-3 font-mono text-xs">${dados.matricula}</td><td data-label="Nome" class="p-3 font-semibold">${dados.nome}</td><td data-label="Função" class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs">${dados.funcao}</span></td><td data-label="Ações" class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500 hover:text-rose-700 transition"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; 
-                });
-            } catch(e) { console.error("Erro ao buscar equipe:", e); }
-        }
-        
-        async function carregarCargaDoDia() { 
-            try {
-                const snapshot = await getDocs(collection(db, "carga_diaria")); 
-                let carga = null; 
-                snapshot.forEach(d=>{ if(d.id===HOJE) carga=d.data(); }); 
-                if(carga){ 
-                    document.getElementById('dash-simples-saiu').innerText=carga.simples_saiu||0; 
-                    document.getElementById('dash-simples-resto').innerText=carga.simples_resto||0; 
-                    document.getElementById('dash-encomendas-saiu').innerText=carga.encomendas_saiu||0; 
-                    document.getElementById('dash-encomendas-resto').innerText=carga.encomendas_resto||0; 
-                    document.getElementById('dash-registrados-saiu').innerText=carga.registrados_saiu||0; 
-                    document.getElementById('dash-registrados-resto').innerText=carga.registrados_resto||0; 
-                } 
-            } catch(e) { console.warn("Erro ao carregar carga:", e); }
+            const snapshot = await getDocs(collection(db, "funcionarios")); 
+            cacheEquipe = []; 
+            const seletor = document.getElementById('alocacao-func'); 
+            const tabelaCorpo = document.getElementById('lista-funcionarios-corpo'); 
+            seletor.innerHTML = '<option value="">Selecione agente...</option>'; 
+            tabelaCorpo.innerHTML = ''; 
+            snapshot.forEach((docSnap) => { 
+                const dados = docSnap.data(); 
+                cacheEquipe.push(dados); 
+                seletor.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`; 
+                tabelaCorpo.innerHTML += `<tr><td class="p-3 font-mono text-xs">${dados.matricula}</td><td class="p-3 font-semibold">${dados.nome}</td><td class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-xs">${dados.funcao}</span></td><td class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500 hover:text-rose-700"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; 
+            });
         }
         
         function atualizarResumoSetorFuncao() { 
@@ -350,29 +462,22 @@
         }
         
         function renderizarDashboard() { 
-            const tabela = document.getElementById('dash-tabela-distribuicao'); 
             const containerEfetivo = document.getElementById('dash-efetivo-lista'); 
-            tabela.innerHTML = ''; 
             const contadores = { Motorista:0, Motociclista:0, Ciclista:0, Pedestre:0, Interno:0, Gestão:0 }; 
-            cacheEquipe.forEach(func => { 
-                const temDistrito = func.tipoSetor && func.tipoSetor !== 'Nenhum'; 
-                const distritoExibido = temDistrito ? `Distrito ${func.distrito}` : 'Não alocado'; 
-                const setorExibido = temDistrito ? (func.tipoSetor === 'postal' ? 'Postal' : 'Especial') : 'Unidade Interna'; 
-                if(contadores[func.funcao] !== undefined) contadores[func.funcao]++; 
-                tabela.innerHTML += `<tr class="hover:bg-slate-50"><td class="p-3 font-semibold">${func.nome}</td><td class="p-3 text-slate-500">${func.funcao}</td><td class="p-3 font-medium capitalize ${temDistrito ? 'text-amber-600' : 'text-slate-400'}">${setorExibido}</td><td class="p-3 font-bold ${temDistrito ? 'text-emerald-600' : 'text-slate-400'}">${distritoExibido}</td></tr>`; 
-            }); 
+            cacheEquipe.forEach(func => { if(contadores[func.funcao] !== undefined) contadores[func.funcao]++; }); 
             containerEfetivo.innerHTML = ''; 
-            Object.entries(contadores).forEach(([funcao,total])=>{ containerEfetivo.innerHTML+=`<div class="bg-slate-50 p-3 rounded-xl text-center border border-slate-100"><div class="text-xs font-bold text-slate-400 uppercase">${funcao}</div><div class="text-2xl font-black text-slate-800">${total}</div></div>`; }); 
-            atualizarResumoSetorFuncao(); 
+            Object.entries(contadores).forEach(([funcao,total])=>{ containerEfetivo.innerHTML+=`<div class="bg-slate-50 p-3 rounded-xl text-center border"><div class="text-xs font-bold text-slate-400 uppercase">${funcao}</div><div class="text-2xl font-black text-slate-800">${total}</div></div>`; }); 
         }
         
         document.getElementById('form-funcionario').addEventListener('submit', async (e) => { 
             e.preventDefault(); 
-            const matricula = document.getElementById('func-matricula').value.trim(); 
-            const nome = document.getElementById('func-nome').value.trim(); 
-            const funcao = document.getElementById('func-funcao').value; 
-            await setDoc(doc(db, "funcionarios", matricula), { matricula, nome, funcao, tipoSetor: 'Nenhum', distrito: 'Interno' }); 
-            showToast("✅ Agente inserido com sucesso!", "success");
+            await setDoc(doc(db, "funcionarios", document.getElementById('func-matricula').value.trim()), { 
+                matricula: document.getElementById('func-matricula').value.trim(), 
+                nome: document.getElementById('func-nome').value.trim(), 
+                funcao: document.getElementById('func-funcao').value, 
+                tipoSetor: 'Nenhum', distrito: 'Interno' 
+            }); 
+            showToast("✅ Agente inserido!", "success");
             document.getElementById('form-funcionario').reset(); 
             await sincronizarAplicativo(); 
         });
@@ -383,53 +488,40 @@
             if(!matricula) return alert("Selecione um funcionário."); 
             const novoSetor = document.getElementById('alocacao-tipo').value; 
             const novoDistrito = document.getElementById('alocacao-distrito').value || 'Interno'; 
-            const funcRef = doc(db, "funcionarios", matricula); 
-            const funcSnap = await getDoc(funcRef); 
-            const dadosAntigos = funcSnap.data(); 
-            if(!dadosAntigos) return alert("Funcionário não encontrado!"); 
-            const setorAntigo = dadosAntigos?.tipoSetor || 'Nenhum'; 
-            const distritoAntigo = dadosAntigos?.distrito || 'Interno'; 
-            
-            // Atualiza o funcionário
-            await updateDoc(funcRef, { tipoSetor: novoSetor, distrito: novoDistrito }); 
-            
-            // SALVA NO HISTÓRICO DO FIREBASE
-            await salvarHistoricoFirebase(matricula, dadosAntigos.nome, dadosAntigos.funcao, setorAntigo, novoSetor, distritoAntigo, novoDistrito);
-            
-            showToast("✅ Roteiro atualizado e histórico salvo no Firebase!", "success");
+            await updateDoc(doc(db, "funcionarios", matricula), { tipoSetor: novoSetor, distrito: novoDistrito }); 
+            showToast("✅ Roteiro atualizado!", "success");
             await sincronizarAplicativo(); 
-            switchTab('dashboard'); 
         });
         
         document.getElementById('form-carga').addEventListener('submit', async (e) => { 
             e.preventDefault(); 
-            const payload = { simples_saiu: Number(document.getElementById('carga-simples-saiu').value)||0, simples_resto: Number(document.getElementById('carga-simples-resto').value)||0, encomendas_saiu: Number(document.getElementById('carga-encomendas-saiu').value)||0, encomendas_resto: Number(document.getElementById('carga-encomendas-resto').value)||0, registrados_saiu: Number(document.getElementById('carga-registrados-saiu').value)||0, registrados_resto: Number(document.getElementById('carga-registrados-resto').value)||0, data: HOJE }; 
-            await setDoc(doc(db, "carga_diaria", HOJE), payload); 
-            showToast("📦 Movimento de carga consolidado!", "success");
-            await sincronizarAplicativo(); 
-            switchTab('dashboard'); 
+            const simplesSaiu = parseInt(document.getElementById('carga-simples-saiu').value) || 0;
+            const simplesResto = parseInt(document.getElementById('carga-simples-resto').value) || 0;
+            const encomendasSaiu = parseInt(document.getElementById('carga-encomendas-saiu').value) || 0;
+            const encomendasResto = parseInt(document.getElementById('carga-encomendas-resto').value) || 0;
+            const registradosSaiu = parseInt(document.getElementById('carga-registrados-saiu').value) || 0;
+            const registradosResto = parseInt(document.getElementById('carga-registrados-resto').value) || 0;
+            
+            if (simplesSaiu > 0) await adicionarMovimento('simples', simplesSaiu, 0);
+            if (simplesResto > 0) await adicionarMovimento('simples', 0, simplesResto);
+            if (encomendasSaiu > 0) await adicionarMovimento('encomendas', encomendasSaiu, 0);
+            if (encomendasResto > 0) await adicionarMovimento('encomendas', 0, encomendasResto);
+            if (registradosSaiu > 0) await adicionarMovimento('registrados', registradosSaiu, 0);
+            if (registradosResto > 0) await adicionarMovimento('registrados', 0, registradosResto);
+            
+            showToast("✅ Movimento adicionado com sucesso!", "success");
+            zerarCampos();
+            await atualizarPreviews();
+            await carregarHistoricoMovimentos();
         });
         
         window.deletarFuncionario = async function(matricula){ 
             if(confirm("Remover este agente?")){ 
                 await deleteDoc(doc(db, "funcionarios", matricula)); 
                 await sincronizarAplicativo(); 
-                showToast("🗑️ Agente removido com sucesso", "success");
+                showToast("🗑️ Agente removido", "success");
             } 
         }
-        
-        document.getElementById('btn-limpar-filtros').addEventListener('click', ()=>{ 
-            document.getElementById('filtro-historico-func').value = ''; 
-            document.getElementById('filtro-historico-setor').value = ''; 
-            carregarHistoricoFirebase(); 
-        });
-        
-        document.getElementById('btn-atualizar-historico').addEventListener('click', ()=>{ 
-            carregarHistoricoFirebase(); 
-        });
-        
-        document.getElementById('filtro-historico-func').addEventListener('change', ()=>carregarHistoricoFirebase());
-        document.getElementById('filtro-historico-setor').addEventListener('change', ()=>carregarHistoricoFirebase());
         
         window.addEventListener('DOMContentLoaded', async () => { 
             atualizarSeletorDistritos(); 
