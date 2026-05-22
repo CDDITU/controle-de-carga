@@ -6,46 +6,33 @@
     <title>SGO Nexus | Unidade Operacional</title>
     <!-- Tailwind CSS v3 + custom utilities -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome 6 (gratuito) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts para toque moderno -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        * { font-family: 'Inter', system-ui, sans-serif; }
         body { background: linear-gradient(135deg, #f0f9f4 0%, #e6f0ec 100%); background-attachment: fixed; }
-        .card-glass {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(0px);
-            transition: all 0.2s ease;
-        }
-        .hover-lift:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.08);
-        }
-        .tab-active {
-            background: rgba(16, 185, 129, 0.12);
-            color: #059669;
-            border-left: 3px solid #10b981;
-            font-weight: 600;
-        }
-        /* scroll custom */
+        .card-glass { background: rgba(255, 255, 255, 0.96); transition: all 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.08); }
+        .tab-active { background: rgba(16, 185, 129, 0.12); color: #059669; border-left: 3px solid #10b981; font-weight: 600; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        input, select { transition: all 0.2s; }
         input:focus, select:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); border-color: #10b981; }
         .stat-number { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
         @media (max-width: 768px) {
             .table-responsive tbody tr { display: flex; flex-direction: column; border-bottom: 1px solid #e2e8f0; padding: 1rem; }
             .table-responsive thead { display: none; }
             .table-responsive td { padding: 0.4rem 0; display: flex; justify-content: space-between; align-items: center; border: none; }
-            .table-responsive td::before { content: attr(data-label); font-weight: 700; font-size: 0.7rem; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+            .table-responsive td::before { content: attr(data-label); font-weight: 700; font-size: 0.7rem; color: #475569; text-transform: uppercase; }
         }
+        .timeline-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col md:flex-row font-sans antialiased">
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
 
-    <!-- MENU MOBILE (topbar) -->
+    <!-- MENU MOBILE -->
     <div class="bg-slate-900 text-white px-5 py-3 flex justify-between items-center md:hidden w-full shadow-lg z-50 fixed top-0 left-0 backdrop-blur-sm bg-slate-900/95">
         <div class="flex items-center gap-2">
             <i class="fa-solid fa-envelope-open-text text-emerald-400 text-xl"></i>
@@ -56,7 +43,7 @@
         </button>
     </div>
 
-    <!-- SIDEBAR (desktop + retrátil mobile) -->
+    <!-- SIDEBAR -->
     <div id="sidebar" class="w-full md:w-72 bg-slate-900 text-slate-200 flex flex-col fixed md:sticky top-0 h-screen z-40 transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 pt-16 md:pt-0 shadow-2xl">
         <div class="flex-1 px-5 py-6">
             <div class="hidden md:flex items-center gap-3 mb-10 border-b border-slate-700/60 pb-5">
@@ -65,20 +52,19 @@
             </div>
             <nav class="space-y-1.5">
                 <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-dashboard">
-                    <i class="fa-solid fa-chart-pie w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> 
-                    <span class="font-medium">Dashboard</span>
+                    <i class="fa-solid fa-chart-pie w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span class="font-medium">Dashboard</span>
                 </button>
                 <button onclick="switchTab('funcionarios')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-funcionarios">
-                    <i class="fa-solid fa-users w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> 
-                    <span>Equipe & Cadastro</span>
+                    <i class="fa-solid fa-users w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Equipe & Cadastro</span>
                 </button>
                 <button onclick="switchTab('alocacao')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-alocacao">
-                    <i class="fa-solid fa-map-location-dot w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> 
-                    <span>Alocar Distritos</span>
+                    <i class="fa-solid fa-map-location-dot w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Alocar Distritos</span>
+                </button>
+                <button onclick="switchTab('historico')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-historico">
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Histórico de Alocações</span>
                 </button>
                 <button onclick="switchTab('carga')" class="tab-btn w-full flex items-center gap-4 text-left py-3 px-4 rounded-xl transition-all duration-200 text-slate-300 hover:bg-slate-800/70 group" id="btn-carga">
-                    <i class="fa-solid fa-box-open w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> 
-                    <span>Movimento de Carga</span>
+                    <i class="fa-solid fa-box-open w-5 text-emerald-400/70 group-hover:text-emerald-400"></i> <span>Movimento de Carga</span>
                 </button>
             </nav>
         </div>
@@ -88,95 +74,76 @@
         </div>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL (refinado) -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="flex-1 p-4 md:p-8 mt-16 md:mt-0 overflow-x-auto">
         
-        <!-- DASHBOARD MODERNO -->
+        <!-- DASHBOARD (com resumo de funções por setor) -->
         <div id="tab-dashboard" class="tab-content space-y-7 animate-fade-in">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-emerald-100 pb-5">
-                <div>
-                    <h2 class="text-3xl font-black tracking-tight bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Painel de Controle</h2>
-                    <p class="text-slate-500 text-sm mt-1">Visão executiva de produtividade e alocação</p>
-                </div>
+                <div><h2 class="text-3xl font-black tracking-tight bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Painel de Controle</h2><p class="text-slate-500 text-sm mt-1">Visão executiva de produtividade e alocação</p></div>
                 <span class="bg-white/80 backdrop-blur-sm text-slate-700 px-4 py-1.5 rounded-full text-xs font-semibold shadow-sm border border-emerald-200"><i class="fa-regular fa-clock mr-1"></i> Tempo real</span>
             </div>
             
             <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-chart-simple text-emerald-500"></i> Balanço de Objetos Postais (Hoje)</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift transition-all duration-200 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-2xl"></div>
-                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Simples</span><i class="fa-solid fa-envelope text-blue-500 text-2xl bg-blue-50 p-2 rounded-xl"></i></div>
-                    <div class="grid grid-cols-2 gap-3 mt-2"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-simples-saiu" class="stat-number block text-2xl font-black text-blue-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-simples-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div>
-                </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-2xl"></div>
-                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Encomendas</span><i class="fa-solid fa-cubes text-amber-500 text-2xl bg-amber-50 p-2 rounded-xl"></i></div>
-                    <div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-encomendas-saiu" class="stat-number block text-2xl font-black text-amber-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-encomendas-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div>
-                </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-2xl"></div>
-                    <div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Registrados</span><i class="fa-solid fa-box-archive text-emerald-500 text-2xl bg-emerald-50 p-2 rounded-xl"></i></div>
-                    <div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-registrados-saiu" class="stat-number block text-2xl font-black text-emerald-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-registrados-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div>
-                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-2xl"></div><div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Simples</span><i class="fa-solid fa-envelope text-blue-500 text-2xl bg-blue-50 p-2 rounded-xl"></i></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-simples-saiu" class="stat-number block text-2xl font-black text-blue-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-simples-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div></div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-2xl"></div><div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Encomendas</span><i class="fa-solid fa-cubes text-amber-500 text-2xl bg-amber-50 p-2 rounded-xl"></i></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-encomendas-saiu" class="stat-number block text-2xl font-black text-amber-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-encomendas-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div></div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover-lift relative overflow-hidden"><div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-2xl"></div><div class="flex justify-between items-start mb-4"><span class="text-sm font-black uppercase text-slate-500">Registrados</span><i class="fa-solid fa-box-archive text-emerald-500 text-2xl bg-emerald-50 p-2 rounded-xl"></i></div><div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Saiu</span><span id="dash-registrados-saiu" class="stat-number block text-2xl font-black text-emerald-600">0</span></div><div class="bg-slate-50 rounded-xl p-2 text-center"><span class="text-xs text-slate-400">Resto</span><span id="dash-registrados-resto" class="stat-number block text-2xl font-black text-slate-700">0</span></div></div></div>
             </div>
 
+            <!-- NOVO RESUMO: QUANTOS FUNCIONÁRIOS POR FUNÇÃO EM CADA SETOR -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
-                <h3 class="text-sm font-bold text-slate-500 uppercase flex items-center gap-2 mb-5"><i class="fa-solid fa-briefcase"></i> Efetivo Alocado em Roteiros</h3>
-                <div id="dash-efetivo-lista" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+                <h3 class="text-sm font-bold text-slate-500 uppercase flex items-center gap-2 mb-5"><i class="fa-solid fa-chart-pie text-emerald-500"></i> Distribuição de Efetivo por Função e Setor</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-slate-100 text-slate-600"><tr><th class="p-3 text-left">Função</th><th class="p-3 text-left">Setor Postal (601-624)</th><th class="p-3 text-left">Setor Especial (301-334)</th><th class="p-3 text-left">Unidade Interna</th></tr></thead>
+                        <tbody id="resumo-setor-funcao" class="divide-y"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="p-5 bg-slate-50/80 border-b border-slate-100 flex justify-between items-center"><h3 class="font-bold text-slate-700"><i class="fa-regular fa-map mr-2 text-emerald-500"></i>Espelho Operacional da Equipe</h3><i class="fa-solid fa-people-arrows text-slate-300"></i></div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5"><h3 class="text-sm font-bold text-slate-500 uppercase flex items-center gap-2 mb-5"><i class="fa-solid fa-briefcase"></i> Efetivo Alocado em Roteiros</h3><div id="dash-efetivo-lista" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div></div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"><div class="p-5 bg-slate-50/80 border-b border-slate-100 flex justify-between items-center"><h3 class="font-bold text-slate-700"><i class="fa-regular fa-map mr-2 text-emerald-500"></i>Espelho Operacional da Equipe</h3></div><div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="bg-slate-100 text-slate-500 text-xs uppercase"><th class="p-4">Funcionário</th><th class="p-4">Função</th><th class="p-4">Setor</th><th class="p-4">Distrito</th></tr></thead><tbody id="dash-tabela-distribuicao"></tbody></table></div></div>
+        </div>
+
+        <!-- MÓDULO CADASTRO -->
+        <div id="tab-funcionarios" class="tab-content hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4 flex items-center gap-2"><i class="fa-solid fa-user-plus text-emerald-600"></i> Cadastro Geral de Equipe</h2>
+            <form id="form-funcionario" class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end"><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5">Nome Completo</label><input type="text" id="func-nome" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5">Matrícula</label><input type="text" id="func-matricula" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5">Função</label><select id="func-funcao" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"><option value="Motorista">Motorista</option><option value="Motociclista">Motociclista</option><option value="Ciclista">Ciclista</option><option value="Pedestre">Pedestre</option><option value="Interno">Interno</option><option value="Gestão">Gestão</option></select></div><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"><i class="fa-solid fa-save"></i> Salvar</button></form>
+            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden"><div class="p-4 bg-slate-50 border-b font-bold text-slate-700"><i class="fa-regular fa-clipboard mr-2"></i>Efetivo Cadastrado</div><div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-100 text-slate-600 text-xs"><tr><th class="p-3">Matrícula</th><th class="p-3">Nome</th><th class="p-3">Função</th><th class="p-3 text-center">Ações</th></tr></thead><tbody id="lista-funcionarios-corpo"></tbody></table></div></div>
+        </div>
+
+        <!-- ALOCAÇÃO DE DISTRITOS -->
+        <div id="tab-alocacao" class="tab-content hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-route text-emerald-600 mr-2"></i> Gerenciamento Fixo de Linhas</h2>
+            <form id="form-alocacao" class="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end"><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Agente</label><select id="alocacao-func" required class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Setor Alvo</label><select id="alocacao-tipo" onchange="atualizarSeletorDistritos()" class="w-full border rounded-xl p-2.5"><option value="especial">Especial (301-334)</option><option value="postal">Postal (601-624)</option><option value="Nenhum">Nenhum (Unidade)</option></select></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Distrito</label><select id="alocacao-distrito" class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition flex items-center justify-center gap-2"><i class="fa-solid fa-location-dot"></i> Atualizar Roteiro</button></form>
+        </div>
+
+        <!-- HISTÓRICO DE ALOCAÇÕES (NOVA ABA) -->
+        <div id="tab-historico" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Histórico de Mudanças de Distritos</h2>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Filtrar por Funcionário</label><select id="filtro-historico-func" class="w-full border rounded-xl p-2.5"><option value="">Todos os funcionários</option></select></div>
+                    <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Filtrar por Setor</label><select id="filtro-historico-setor" class="w-full border rounded-xl p-2.5"><option value="">Todos</option><option value="postal">Postal (601-624)</option><option value="especial">Especial (301-334)</option><option value="Nenhum">Unidade Interna</option></select></div>
+                    <div class="flex items-end"><button id="btn-limpar-filtros" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition w-full"><i class="fa-regular fa-filter-circle-xmark mr-1"></i> Limpar Filtros</button></div>
+                </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead><tr class="bg-slate-100 text-slate-500 text-xs uppercase font-bold border-b"><th class="p-4">Funcionário</th><th class="p-4">Função</th><th class="p-4">Setor</th><th class="p-4">Distrito Assinado</th></tr></thead>
-                        <tbody id="dash-tabela-distribuicao" class="text-sm divide-y"></tbody>
+                    <table class="w-full text-left table-responsive">
+                        <thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Funcionário</th><th class="p-3">Função</th><th class="p-3">Setor Anterior</th><th class="p-3">Novo Setor</th><th class="p-3">Distrito Anterior</th><th class="p-3">Novo Distrito</th></tr></thead>
+                        <tbody id="historico-lista-tbody"><tr><td colspan="7" class="p-6 text-center text-slate-400">Carregando histórico...</td></tr></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- MÓDULO CADASTRO REFINADO -->
-        <div id="tab-funcionarios" class="tab-content hidden space-y-6">
-            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4 flex items-center gap-2"><i class="fa-solid fa-user-plus text-emerald-600"></i> Cadastro Geral de Equipe</h2>
-            <form id="form-funcionario" class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
-                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5"><i class="fa-regular fa-user mr-1"></i> Nome Completo</label><input type="text" id="func-nome" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:bg-white transition"></div>
-                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5"><i class="fa-regular fa-id-card"></i> Matrícula</label><input type="text" id="func-matricula" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"></div>
-                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1.5"><i class="fa-solid fa-briefcase"></i> Função</label><select id="func-funcao" class="w-full border border-gray-200 rounded-xl p-2.5 bg-gray-50"><option value="Motorista">Motorista</option><option value="Motociclista">Motociclista</option><option value="Ciclista">Ciclista</option><option value="Pedestre">Pedestre</option><option value="Interno">Interno</option><option value="Gestão">Gestão</option></select></div>
-                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"><i class="fa-solid fa-save"></i> Salvar</button>
-            </form>
-            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden"><div class="p-4 bg-slate-50 border-b font-bold text-slate-700"><i class="fa-regular fa-clipboard mr-2"></i>Efetivo Cadastrado</div><div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-3">Matrícula</th><th class="p-3">Nome</th><th class="p-3">Função</th><th class="p-3 text-center">Ações</th></tr></thead><tbody id="lista-funcionarios-corpo" class="text-sm divide-y"></tbody></table></div></div>
-        </div>
-
-        <!-- ALOCAÇÃO DE DISTRITOS (modernizada) -->
-        <div id="tab-alocacao" class="tab-content hidden space-y-6">
-            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-route text-emerald-600 mr-2"></i> Gerenciamento Fixo de Linhas</h2>
-            <form id="form-alocacao" class="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
-                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Agente</label><select id="alocacao-func" required class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div>
-                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Setor Alvo</label><select id="alocacao-tipo" onchange="atualizarSeletorDistritos()" class="w-full border rounded-xl p-2.5"><option value="especial">Especial (301-334)</option><option value="postal">Postal (601-624)</option><option value="Nenhum">Nenhum (Unidade)</option></select></div>
-                <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Distrito</label><select id="alocacao-distrito" class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div>
-                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition flex items-center justify-center gap-2"><i class="fa-solid fa-location-dot"></i> Atualizar Roteiro</button>
-            </form>
-        </div>
-
         <!-- MOVIMENTO DE CARGA -->
-        <div id="tab-carga" class="tab-content hidden space-y-6">
-            <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-charging-station"></i> Movimento de Carga Diária</h2>
-            <form id="form-carga" class="bg-white p-6 rounded-2xl shadow-md space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-blue-50/60 p-5 rounded-2xl border border-blue-100"><div class="flex items-center gap-2 text-blue-700 font-bold mb-3"><i class="fa-solid fa-envelope"></i> Objetos Simples</div><div class="space-y-3"><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-simples-saiu" min="0" class="w-full border rounded-xl p-2"></div><div><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-simples-resto" min="0" class="w-full border rounded-xl p-2"></div></div></div>
-                    <div class="bg-amber-50/60 p-5 rounded-2xl border border-amber-100"><div class="flex items-center gap-2 text-amber-700 font-bold mb-3"><i class="fa-solid fa-cubes"></i> Encomendas</div><div class="space-y-3"><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-encomendas-saiu" min="0" class="w-full border rounded-xl p-2"></div><div><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-encomendas-resto" min="0" class="w-full border rounded-xl p-2"></div></div></div>
-                    <div class="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-100"><div class="flex items-center gap-2 text-emerald-700 font-bold mb-3"><i class="fa-solid fa-box-archive"></i> Registrados</div><div class="space-y-3"><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-registrados-saiu" min="0" class="w-full border rounded-xl p-2"></div><div><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-registrados-resto" min="0" class="w-full border rounded-xl p-2"></div></div></div>
-                </div>
-                <div class="flex justify-end"><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Gravar Carga</button></div>
-            </form>
+        <div id="tab-carga" class="tab-content hidden space-y-6"><h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4"><i class="fa-solid fa-charging-station"></i> Movimento de Carga Diária</h2>
+            <form id="form-carga" class="bg-white p-6 rounded-2xl shadow-md space-y-6"><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="bg-blue-50/60 p-5 rounded-2xl border border-blue-100"><div class="flex items-center gap-2 text-blue-700 font-bold mb-3"><i class="fa-solid fa-envelope"></i> Objetos Simples</div><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-simples-saiu" min="0" class="w-full border rounded-xl p-2"></div><div class="mt-2"><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-simples-resto" min="0" class="w-full border rounded-xl p-2"></div></div><div class="bg-amber-50/60 p-5 rounded-2xl border border-amber-100"><div class="flex items-center gap-2 text-amber-700 font-bold mb-3"><i class="fa-solid fa-cubes"></i> Encomendas</div><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-encomendas-saiu" min="0" class="w-full border rounded-xl p-2"></div><div class="mt-2"><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-encomendas-resto" min="0" class="w-full border rounded-xl p-2"></div></div><div class="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-100"><div class="flex items-center gap-2 text-emerald-700 font-bold mb-3"><i class="fa-solid fa-box-archive"></i> Registrados</div><div><label class="text-xs font-semibold uppercase">Saiu</label><input type="number" id="carga-registrados-saiu" min="0" class="w-full border rounded-xl p-2"></div><div class="mt-2"><label class="text-xs font-semibold uppercase">Resto</label><input type="number" id="carga-registrados-resto" min="0" class="w-full border rounded-xl p-2"></div></div></div><div class="flex justify-end"><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Gravar Carga</button></div></form>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc, addDoc, query, orderBy, limit, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         const firebaseConfig = { apiKey: "AIzaSyA9rmTKGWXzq-wEr3SImGLmKQyEjvpHyHw", authDomain: "controle-de-carga-e-pessoal.firebaseapp.com", projectId: "controle-de-carga-e-pessoal", storageBucket: "controle-de-carga-e-pessoal.firebasestorage.app", messagingSenderId: "208095482783", appId: "1:208095482783:web:3351b8b2f0a55271ed23aa" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -185,71 +152,37 @@
         let cacheEquipe = [];
 
         window.toggleMobileMenu = function() { const sidebar = document.getElementById('sidebar'); const icon = document.getElementById('menu-icon'); if(sidebar.classList.contains('-translate-x-full')){ sidebar.classList.remove('-translate-x-full'); icon.classList.replace('fa-bars','fa-xmark'); } else { sidebar.classList.add('-translate-x-full'); icon.classList.replace('fa-xmark','fa-bars'); } }
-        window.switchTab = function(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('tab-active', 'bg-slate-800/40', 'text-white'); el.classList.add('text-slate-300'); });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${tabName}`);
-            activeBtn.classList.add('tab-active', 'bg-slate-800/40', 'text-white');
-            if(window.innerWidth < 768) toggleMobileMenu();
+        window.switchTab = function(tabName) { document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('tab-active', 'bg-slate-800/40', 'text-white'); el.classList.add('text-slate-300'); }); document.getElementById(`tab-${tabName}`).classList.remove('hidden'); const activeBtn = document.getElementById(`btn-${tabName}`); if(activeBtn) activeBtn.classList.add('tab-active', 'bg-slate-800/40', 'text-white'); if(window.innerWidth < 768) toggleMobileMenu(); if(tabName === 'historico') carregarHistorico(); }
+        window.atualizarSeletorDistritos = function() { const tipo = document.getElementById('alocacao-tipo').value; const seletor = document.getElementById('alocacao-distrito'); seletor.innerHTML = ''; if(tipo === 'especial') { seletor.disabled=false; for(let i=301;i<=334;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; } else if(tipo === 'postal') { seletor.disabled=false; for(let i=601;i<=624;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; } else { seletor.innerHTML='<option value="Interno">Não se aplica</option>'; seletor.disabled=true; } }
+
+        async function registrarHistorico(matricula, nome, funcao, setorAntigo, setorNovo, distritoAntigo, distritoNovo) {
+            try { await addDoc(collection(db, "historico_alocacoes"), { matricula, nome, funcao, setorAntigo, setorNovo, distritoAntigo, distritoNovo, dataHora: new Date().toISOString(), timestamp: Date.now() }); } catch(e){ console.warn("historico não salvo",e); }
         }
-        window.atualizarSeletorDistritos = function() {
-            const tipo = document.getElementById('alocacao-tipo').value;
-            const seletor = document.getElementById('alocacao-distrito');
-            seletor.innerHTML = '';
-            if(tipo === 'especial') { seletor.disabled=false; for(let i=301;i<=334;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; }
-            else if(tipo === 'postal') { seletor.disabled=false; for(let i=601;i<=624;i++) seletor.innerHTML+=`<option value="${i}">Distrito ${i}</option>`; }
-            else { seletor.innerHTML='<option value="Interno">Não se aplica</option>'; seletor.disabled=true; }
+        async function carregarHistorico() { 
+            const q = query(collection(db, "historico_alocacoes"), orderBy("timestamp", "desc"), limit(200));
+            const snapshot = await getDocs(q);
+            const tbody = document.getElementById('historico-lista-tbody');
+            const funcFilter = document.getElementById('filtro-historico-func').value;
+            const setorFilter = document.getElementById('filtro-historico-setor').value;
+            let items = []; snapshot.forEach(docSnap => items.push(docSnap.data()));
+            let filtered = items.filter(item => (!funcFilter || item.matricula === funcFilter) && (!setorFilter || item.setorNovo === setorFilter));
+            if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">Nenhum registro de histórico encontrado.</td></tr>'; return; }
+            tbody.innerHTML = filtered.map(item => `<tr class="border-b hover:bg-slate-50"><td class="p-3 text-xs text-slate-500">${new Date(item.dataHora).toLocaleString('pt-BR')}</td><td class="p-3 font-medium">${item.nome}</td><td class="p-3 text-slate-600">${item.funcao}</td><td class="p-3">${item.setorAntigo || 'Nenhum'}</td><td class="p-3 font-semibold text-emerald-700">${item.setorNovo}</td><td class="p-3">${item.distritoAntigo || 'Interno'}</td><td class="p-3 font-mono">${item.distritoNovo}</td></tr>`).join('');
         }
-        async function sincronizarAplicativo() { await buscarEquipe(); await carregarCargaDoDia(); renderizarDashboard(); }
-        async function buscarEquipe() {
-            const snapshot = await getDocs(collection(db, "funcionarios"));
-            cacheEquipe = [];
-            const seletor = document.getElementById('alocacao-func');
-            const tabelaCorpo = document.getElementById('lista-funcionarios-corpo');
-            seletor.innerHTML = '<option value="">Selecione agente...</option>';
-            tabelaCorpo.innerHTML = '';
-            snapshot.forEach((docSnap) => {
-                const dados = docSnap.data();
-                cacheEquipe.push(dados);
-                seletor.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`;
-                tabelaCorpo.innerHTML += `<tr><td data-label="Matrícula" class="p-3 font-mono text-xs">${dados.matricula}</td><td data-label="Nome" class="p-3 font-semibold">${dados.nome}</td><td data-label="Função" class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs">${dados.funcao}</span></td><td data-label="Ações" class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500 hover:text-rose-700 transition"><i class="fa-regular fa-trash-can"></i></button></td></tr>`;
-            });
-        }
-        async function carregarCargaDoDia() {
-            const snapshot = await getDocs(collection(db, "carga_diaria"));
-            let carga = null; snapshot.forEach(d=>{ if(d.id===HOJE) carga=d.data(); });
-            if(carga){ document.getElementById('dash-simples-saiu').innerText=carga.simples_saiu||0; document.getElementById('dash-simples-resto').innerText=carga.simples_resto||0; document.getElementById('dash-encomendas-saiu').innerText=carga.encomendas_saiu||0; document.getElementById('dash-encomendas-resto').innerText=carga.encomendas_resto||0; document.getElementById('dash-registrados-saiu').innerText=carga.registrados_saiu||0; document.getElementById('dash-registrados-resto').innerText=carga.registrados_resto||0; }
-            else { ['simples-saiu','simples-resto','encomendas-saiu','encomendas-resto','registrados-saiu','registrados-resto'].forEach(id=>document.getElementById(`dash-${id}`).innerText='0'); }
-        }
-        function renderizarDashboard() {
-            const tabela = document.getElementById('dash-tabela-distribuicao');
-            const containerEfetivo = document.getElementById('dash-efetivo-lista');
-            tabela.innerHTML = ''; const contadores = { Motorista:0, Motociclista:0, Ciclista:0, Pedestre:0, Interno:0, Gestão:0 };
-            if(cacheEquipe.length===0) tabela.innerHTML = '<tr><td colspan="4" class="p-5 text-center text-slate-400">Nenhum funcionário ativo</td></tr>';
-            cacheEquipe.forEach(func => {
-                const temDistrito = func.tipoSetor && func.tipoSetor !== 'Nenhum';
-                const distritoExibido = temDistrito ? `Distrito ${func.distrito}` : 'Não alocado';
-                const setorExibido = temDistrito ? func.tipoSetor : 'Unidade Interna';
-                if(contadores[func.funcao] !== undefined) contadores[func.funcao]++;
-                tabela.innerHTML += `<tr class="hover:bg-slate-50"><td class="p-3 font-semibold">${func.nome}</td><td class="p-3 text-slate-500">${func.funcao}</td><td class="p-3 font-medium capitalize ${temDistrito ? 'text-amber-600' : 'text-slate-400'}">${setorExibido}</td><td class="p-3 font-bold ${temDistrito ? 'text-emerald-600' : 'text-slate-400'}">${distritoExibido}</td></tr>`;
-            });
-            containerEfetivo.innerHTML = ''; Object.entries(contadores).forEach(([funcao,total])=>{ containerEfetivo.innerHTML+=`<div class="bg-slate-50 p-3 rounded-xl text-center border border-slate-100"><div class="text-xs font-bold text-slate-400 uppercase">${funcao}</div><div class="text-2xl font-black text-slate-800">${total}</div></div>`; });
-        }
-        document.getElementById('form-funcionario').addEventListener('submit', async (e) => {
-            e.preventDefault(); const matricula = document.getElementById('func-matricula').value.trim(); const nome = document.getElementById('func-nome').value.trim(); const funcao = document.getElementById('func-funcao').value;
-            await setDoc(doc(db, "funcionarios", matricula), { matricula, nome, funcao, tipoSetor: 'Nenhum', distrito: 'Interno' });
-            alert("✅ Agente inserido com sucesso!"); document.getElementById('form-funcionario').reset(); await sincronizarAplicativo();
-        });
-        document.getElementById('form-alocacao').addEventListener('submit', async (e) => {
-            e.preventDefault(); const matricula = document.getElementById('alocacao-func').value; const tipoSetor = document.getElementById('alocacao-tipo').value; const distrito = document.getElementById('alocacao-distrito').value || 'Interno';
-            if(!matricula) return alert("Selecione um funcionário."); await updateDoc(doc(db, "funcionarios", matricula), { tipoSetor, distrito }); alert("✅ Roteiro atualizado!"); await sincronizarAplicativo(); switchTab('dashboard');
-        });
-        document.getElementById('form-carga').addEventListener('submit', async (e) => {
-            e.preventDefault(); const payload = { simples_saiu: Number(document.getElementById('carga-simples-saiu').value)||0, simples_resto: Number(document.getElementById('carga-simples-resto').value)||0, encomendas_saiu: Number(document.getElementById('carga-encomendas-saiu').value)||0, encomendas_resto: Number(document.getElementById('carga-encomendas-resto').value)||0, registrados_saiu: Number(document.getElementById('carga-registrados-saiu').value)||0, registrados_resto: Number(document.getElementById('carga-registrados-resto').value)||0, data: HOJE };
-            await setDoc(doc(db, "carga_diaria", HOJE), payload); alert("📦 Movimento consolidado!"); await sincronizarAplicativo(); switchTab('dashboard');
-        });
+        async function preencherFiltroHistorico() { const snapshot = await getDocs(collection(db, "funcionarios")); const select = document.getElementById('filtro-historico-func'); select.innerHTML = '<option value="">Todos os funcionários</option>'; snapshot.forEach(docSnap => { const data = docSnap.data(); select.innerHTML += `<option value="${data.matricula}">${data.nome} (${data.funcao})</option>`; }); }
+
+        async function sincronizarAplicativo() { await buscarEquipe(); await carregarCargaDoDia(); renderizarDashboard(); atualizarResumoSetorFuncao(); await preencherFiltroHistorico(); }
+        async function buscarEquipe() { const snapshot = await getDocs(collection(db, "funcionarios")); cacheEquipe = []; const seletor = document.getElementById('alocacao-func'); const tabelaCorpo = document.getElementById('lista-funcionarios-corpo'); seletor.innerHTML = '<option value="">Selecione agente...</option>'; tabelaCorpo.innerHTML = ''; snapshot.forEach((docSnap) => { const dados = docSnap.data(); cacheEquipe.push(dados); seletor.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`; tabelaCorpo.innerHTML += `<tr><td data-label="Matrícula" class="p-3 font-mono text-xs">${dados.matricula}</td><td data-label="Nome" class="p-3 font-semibold">${dados.nome}</td><td data-label="Função" class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs">${dados.funcao}</span></td><td data-label="Ações" class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500 hover:text-rose-700 transition"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; }); }
+        async function carregarCargaDoDia() { const snapshot = await getDocs(collection(db, "carga_diaria")); let carga = null; snapshot.forEach(d=>{ if(d.id===HOJE) carga=d.data(); }); if(carga){ document.getElementById('dash-simples-saiu').innerText=carga.simples_saiu||0; document.getElementById('dash-simples-resto').innerText=carga.simples_resto||0; document.getElementById('dash-encomendas-saiu').innerText=carga.encomendas_saiu||0; document.getElementById('dash-encomendas-resto').innerText=carga.encomendas_resto||0; document.getElementById('dash-registrados-saiu').innerText=carga.registrados_saiu||0; document.getElementById('dash-registrados-resto').innerText=carga.registrados_resto||0; } else { ['simples-saiu','simples-resto','encomendas-saiu','encomendas-resto','registrados-saiu','registrados-resto'].forEach(id=>document.getElementById(`dash-${id}`).innerText='0'); } }
+        function atualizarResumoSetorFuncao() { const contagem = {}; cacheEquipe.forEach(func => { const funcao = func.funcao; const setor = func.tipoSetor || 'Nenhum'; if(!contagem[funcao]) contagem[funcao] = { postal:0, especial:0, interno:0 }; if(setor === 'postal') contagem[funcao].postal++; else if(setor === 'especial') contagem[funcao].especial++; else contagem[funcao].interno++; }); const tbody = document.getElementById('resumo-setor-funcao'); tbody.innerHTML = ''; for(const [funcao, vals] of Object.entries(contagem)){ tbody.innerHTML += `<tr class="border-b"><td class="p-3 font-semibold">${funcao}</td><td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs font-bold">${vals.postal}</span></td><td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-bold">${vals.especial}</span></td><td class="p-3"><span class="bg-slate-100 text-slate-700 px-2 py-1 rounded-full text-xs">${vals.interno}</span></td></tr>`; } }
+        function renderizarDashboard() { const tabela = document.getElementById('dash-tabela-distribuicao'); const containerEfetivo = document.getElementById('dash-efetivo-lista'); tabela.innerHTML = ''; const contadores = { Motorista:0, Motociclista:0, Ciclista:0, Pedestre:0, Interno:0, Gestão:0 }; cacheEquipe.forEach(func => { const temDistrito = func.tipoSetor && func.tipoSetor !== 'Nenhum'; const distritoExibido = temDistrito ? `Distrito ${func.distrito}` : 'Não alocado'; const setorExibido = temDistrito ? (func.tipoSetor === 'postal' ? 'Postal' : 'Especial') : 'Unidade Interna'; if(contadores[func.funcao] !== undefined) contadores[func.funcao]++; tabela.innerHTML += `<tr class="hover:bg-slate-50"><td class="p-3 font-semibold">${func.nome}</td><td class="p-3 text-slate-500">${func.funcao}</td><td class="p-3 font-medium capitalize ${temDistrito ? 'text-amber-600' : 'text-slate-400'}">${setorExibido}</td><td class="p-3 font-bold ${temDistrito ? 'text-emerald-600' : 'text-slate-400'}">${distritoExibido}</td></tr>`; }); containerEfetivo.innerHTML = ''; Object.entries(contadores).forEach(([funcao,total])=>{ containerEfetivo.innerHTML+=`<div class="bg-slate-50 p-3 rounded-xl text-center border border-slate-100"><div class="text-xs font-bold text-slate-400 uppercase">${funcao}</div><div class="text-2xl font-black text-slate-800">${total}</div></div>`; }); atualizarResumoSetorFuncao(); }
+        document.getElementById('form-funcionario').addEventListener('submit', async (e) => { e.preventDefault(); const matricula = document.getElementById('func-matricula').value.trim(); const nome = document.getElementById('func-nome').value.trim(); const funcao = document.getElementById('func-funcao').value; await setDoc(doc(db, "funcionarios", matricula), { matricula, nome, funcao, tipoSetor: 'Nenhum', distrito: 'Interno' }); alert("✅ Agente inserido!"); document.getElementById('form-funcionario').reset(); await sincronizarAplicativo(); });
+        document.getElementById('form-alocacao').addEventListener('submit', async (e) => { e.preventDefault(); const matricula = document.getElementById('alocacao-func').value; if(!matricula) return alert("Selecione um funcionário."); const novoSetor = document.getElementById('alocacao-tipo').value; const novoDistrito = document.getElementById('alocacao-distrito').value || 'Interno'; const funcRef = doc(db, "funcionarios", matricula); const funcSnap = await getDoc(funcRef); const dadosAntigos = funcSnap.data(); const setorAntigo = dadosAntigos?.tipoSetor || 'Nenhum'; const distritoAntigo = dadosAntigos?.distrito || 'Interno'; await updateDoc(funcRef, { tipoSetor: novoSetor, distrito: novoDistrito }); await registrarHistorico(matricula, dadosAntigos.nome, dadosAntigos.funcao, setorAntigo, novoSetor, distritoAntigo, novoDistrito); alert("✅ Roteiro atualizado e histórico salvo!"); await sincronizarAplicativo(); switchTab('dashboard'); });
+        document.getElementById('form-carga').addEventListener('submit', async (e) => { e.preventDefault(); const payload = { simples_saiu: Number(document.getElementById('carga-simples-saiu').value)||0, simples_resto: Number(document.getElementById('carga-simples-resto').value)||0, encomendas_saiu: Number(document.getElementById('carga-encomendas-saiu').value)||0, encomendas_resto: Number(document.getElementById('carga-encomendas-resto').value)||0, registrados_saiu: Number(document.getElementById('carga-registrados-saiu').value)||0, registrados_resto: Number(document.getElementById('carga-registrados-resto').value)||0, data: HOJE }; await setDoc(doc(db, "carga_diaria", HOJE), payload); alert("📦 Movimento consolidado!"); await sincronizarAplicativo(); switchTab('dashboard'); });
         window.deletarFuncionario = async function(matricula){ if(confirm("Remover este agente?")){ await deleteDoc(doc(db, "funcionarios", matricula)); await sincronizarAplicativo(); } }
+        document.getElementById('btn-limpar-filtros').addEventListener('click', ()=>{ document.getElementById('filtro-historico-func').value = ''; document.getElementById('filtro-historico-setor').value = ''; carregarHistorico(); });
+        document.getElementById('filtro-historico-func').addEventListener('change', ()=>carregarHistorico());
+        document.getElementById('filtro-historico-setor').addEventListener('change', ()=>carregarHistorico());
         window.addEventListener('DOMContentLoaded', async () => { atualizarSeletorDistritos(); await sincronizarAplicativo(); switchTab('dashboard'); });
     </script>
 </body>
