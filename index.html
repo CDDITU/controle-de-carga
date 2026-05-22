@@ -17,11 +17,15 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         input:focus, select:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); border-color: #10b981; outline: none; }
         .stat-number { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-pulse-slow { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .toast-notification { position: fixed; bottom: 20px; right: 20px; z-index: 1000; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #f3f3f3; border-top: 2px solid #10b981; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col md:flex-row antialiased">
+
+    <div id="toast" class="toast-notification hidden bg-slate-800 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2"></div>
 
     <!-- MENU MOBILE -->
     <div class="bg-slate-900 text-white px-5 py-3 flex justify-between items-center md:hidden w-full shadow-lg z-50 fixed top-0 left-0 backdrop-blur-sm bg-slate-900/95">
@@ -107,19 +111,20 @@
             <form id="form-alocacao" class="bg-white p-6 rounded-2xl shadow-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end"><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Agente</label><select id="alocacao-func" required class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Setor Alvo</label><select id="alocacao-tipo" onchange="atualizarSeletorDistritos()" class="w-full border rounded-xl p-2.5"><option value="especial">Especial (301-334)</option><option value="postal">Postal (601-624)</option><option value="Nenhum">Nenhum (Unidade)</option></select></div><div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Distrito</label><select id="alocacao-distrito" class="w-full border rounded-xl p-2.5 bg-gray-50"></select></div><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl transition flex items-center justify-center gap-2"><i class="fa-solid fa-location-dot"></i> Atualizar Roteiro</button></form>
         </div>
 
-        <!-- HISTÓRICO DE ALOCAÇÕES - VERSÃO CORRIGIDA -->
+        <!-- HISTÓRICO DE ALOCAÇÕES - AGORA COM FIREBASE! -->
         <div id="tab-historico" class="tab-content hidden space-y-6">
             <h2 class="text-2xl font-black text-slate-800 border-b border-emerald-200 pb-4 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Histórico de Mudanças de Distritos</h2>
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Filtrar por Funcionário</label><select id="filtro-historico-func" class="w-full border rounded-xl p-2.5 bg-gray-50"><option value="">Todos os funcionários</option></select></div>
                     <div><label class="block text-xs font-bold uppercase text-gray-500 mb-1">Filtrar por Setor</label><select id="filtro-historico-setor" class="w-full border rounded-xl p-2.5 bg-gray-50"><option value="">Todos</option><option value="postal">Postal (601-624)</option><option value="especial">Especial (301-334)</option><option value="Nenhum">Unidade Interna</option></select></div>
-                    <div class="flex items-end"><button id="btn-limpar-filtros" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition w-full"><i class="fa-regular fa-filter-circle-xmark mr-1"></i> Limpar Filtros</button></div>
+                    <div><button id="btn-limpar-filtros" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition w-full"><i class="fa-regular fa-filter-circle-xmark mr-1"></i> Limpar Filtros</button></div>
+                    <div><button id="btn-atualizar-historico" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-medium py-2.5 px-4 rounded-xl transition w-full"><i class="fa-solid fa-rotate-right mr-1"></i> Atualizar</button></div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="bg-slate-100 text-slate-600 text-xs uppercase"><tr><th class="p-3">Data/Hora</th><th class="p-3">Funcionário</th><th class="p-3">Função</th><th class="p-3">Setor Anterior</th><th class="p-3">Novo Setor</th><th class="p-3">Distrito Anterior</th><th class="p-3">Novo Distrito</th></tr></thead>
-                        <tbody id="historico-lista-tbody"><tr><td colspan="7" class="p-6 text-center"><div class="flex items-center justify-center gap-2 text-slate-400"><i class="fa-solid fa-spinner fa-pulse"></i> Carregando histórico de alocações...</div></td></tr></tbody>
+                        <tbody id="historico-lista-tbody"><tr><td colspan="7" class="p-6 text-center text-slate-400"><div class="loading-spinner mx-auto mb-2"></div>Carregando histórico do Firebase...</div></td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -133,7 +138,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc, addDoc, query, orderBy, limit, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, collection, getDocs, deleteDoc, getDoc, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         const firebaseConfig = { 
             apiKey: "AIzaSyA9rmTKGWXzq-wEr3SImGLmKQyEjvpHyHw", 
@@ -144,19 +149,21 @@
             appId: "1:208095482783:web:3351b8b2f0a55271ed23aa" 
         };
         
-        let app, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            console.log("Firebase inicializado com sucesso");
-        } catch(e) {
-            console.error("Erro ao inicializar Firebase:", e);
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
         
         const HOJE = new Date().toISOString().split('T')[0];
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR');
         let cacheEquipe = [];
-
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+            toast.innerHTML = `<i class="fa-solid ${icon} mr-2"></i> ${message}`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+        
         window.toggleMobileMenu = function() { 
             const sidebar = document.getElementById('sidebar'); 
             const icon = document.getElementById('menu-icon'); 
@@ -179,7 +186,7 @@
             const activeBtn = document.getElementById(`btn-${tabName}`); 
             if(activeBtn) activeBtn.classList.add('tab-active', 'bg-slate-800/40', 'text-white'); 
             if(window.innerWidth < 768) toggleMobileMenu(); 
-            if(tabName === 'historico') carregarHistorico(); 
+            if(tabName === 'historico') carregarHistoricoFirebase(); 
         }
         
         window.atualizarSeletorDistritos = function() { 
@@ -197,47 +204,55 @@
                 seletor.disabled=true; 
             } 
         }
-
-        // Função melhorada para registrar histórico
-        async function registrarHistorico(matricula, nome, funcao, setorAntigo, setorNovo, distritoAntigo, distritoNovo) {
-            if (!db) return;
-            if (setorAntigo === setorNovo && distritoAntigo === distritoNovo) return;
+        
+        // ========== FUNÇÃO PARA SALVAR HISTÓRICO NO FIREBASE ==========
+        async function salvarHistoricoFirebase(matricula, nome, funcao, setorAntigo, setorNovo, distritoAntigo, distritoNovo) {
+            if (setorAntigo === setorNovo && distritoAntigo === distritoNovo) return null;
+            
+            const registro = {
+                matricula,
+                nome,
+                funcao,
+                setorAntigo: setorAntigo || 'Nenhum',
+                setorNovo: setorNovo || 'Nenhum',
+                distritoAntigo: distritoAntigo || 'Interno',
+                distritoNovo: distritoNovo || 'Interno',
+                dataHora: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+            
             try {
-                await addDoc(collection(db, "historico_alocacoes"), { 
-                    matricula, nome, funcao, 
-                    setorAntigo: setorAntigo || 'Nenhum', 
-                    setorNovo: setorNovo || 'Nenhum', 
-                    distritoAntigo: distritoAntigo || 'Interno', 
-                    distritoNovo: distritoNovo || 'Interno', 
-                    dataHora: new Date().toISOString(), 
-                    timestamp: Date.now() 
-                });
-            } catch(e) { 
-                console.warn("Erro ao salvar histórico (não crítico):", e);
+                // Adiciona documento à coleção historico_alocacoes
+                const docRef = await addDoc(collection(db, "historico_alocacoes"), registro);
+                console.log("Histórico salvo no Firebase com ID:", docRef.id);
+                showToast("✅ Histórico registrado no banco de dados!", "success");
+                return docRef.id;
+            } catch (error) {
+                console.error("Erro ao salvar histórico no Firebase:", error);
+                showToast("⚠️ Erro ao salvar histórico: " + error.message, "error");
+                return null;
             }
         }
         
-        // Função melhorada para carregar histórico
-        async function carregarHistorico() { 
+        // ========== FUNÇÃO PARA CARREGAR HISTÓRICO DO FIREBASE ==========
+        async function carregarHistoricoFirebase() {
             const tbody = document.getElementById('historico-lista-tbody');
             const funcFilter = document.getElementById('filtro-historico-func').value;
             const setorFilter = document.getElementById('filtro-historico-setor').value;
             
-            if (!db) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-red-500"><i class="fa-solid fa-database mr-2"></i>Erro de conexão com o banco de dados</td></tr>';
-                return;
-            }
+            tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center"><div class="loading-spinner mx-auto mb-2"></div>Carregando histórico do Firebase...</div></td></tr>';
             
             try {
                 const q = query(collection(db, "historico_alocacoes"), orderBy("timestamp", "desc"), limit(500));
                 const snapshot = await getDocs(q);
-                let items = []; 
-                snapshot.forEach(docSnap => items.push(docSnap.data()));
                 
-                if(items.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400"><i class="fa-regular fa-folder-open mr-2"></i>Nenhum registro de histórico encontrado. Faça uma alocação para começar.</td></tr>';
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400"><i class="fa-regular fa-folder-open mr-2"></i>Nenhum registro de histórico encontrado. Faça uma alocação para começar.</div></td></tr>';
                     return;
                 }
+                
+                let items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
                 
                 let filtered = items.filter(item => {
                     let matchFunc = !funcFilter || item.matricula === funcFilter;
@@ -245,8 +260,8 @@
                     return matchFunc && matchSetor;
                 });
                 
-                if(filtered.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400"><i class="fa-regular fa-filter-circle-xmark mr-2"></i>Nenhum registro encontrado com os filtros selecionados.</td></tr>';
+                if (filtered.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400"><i class="fa-regular fa-filter-circle-xmark mr-2"></i>Nenhum registro encontrado com os filtros selecionados.</div></td></tr>';
                     return;
                 }
                 
@@ -261,27 +276,21 @@
                         <td class="p-3 font-mono text-xs font-bold text-emerald-600">${item.distritoNovo || 'Interno'}</td>
                     </tr>
                 `).join('');
-            } catch(error) {
-                console.error("Erro detalhado ao carregar histórico:", error);
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-amber-600"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Erro ao carregar histórico: ${error.message || 'Tente novamente mais tarde'}.<br><span class="text-xs">Verifique sua conexão com a internet.</span></td></tr>`;
+                
+            } catch (error) {
+                console.error("Erro ao carregar histórico do Firebase:", error);
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Erro ao carregar histórico: ${error.message}<br><span class="text-xs">Verifique as regras do Firebase para a coleção 'historico_alocacoes'</span></div></td></tr>`;
             }
         }
         
         async function preencherFiltroHistorico() { 
-            if (!db) return;
-            try {
-                const snapshot = await getDocs(collection(db, "funcionarios")); 
-                const select = document.getElementById('filtro-historico-func'); 
-                select.innerHTML = '<option value="">Todos os funcionários</option>'; 
-                snapshot.forEach(docSnap => { 
-                    const data = docSnap.data(); 
-                    select.innerHTML += `<option value="${data.matricula}">${data.nome} (${data.funcao})</option>`; 
-                });
-            } catch(e) {
-                console.warn("Erro ao preencher filtro:", e);
-            }
+            const select = document.getElementById('filtro-historico-func'); 
+            select.innerHTML = '<option value="">Todos os funcionários</option>'; 
+            cacheEquipe.forEach(func => { 
+                select.innerHTML += `<option value="${func.matricula}">${func.nome} (${func.funcao})</option>`; 
+            });
         }
-
+        
         async function sincronizarAplicativo() { 
             await buscarEquipe(); 
             await carregarCargaDoDia(); 
@@ -291,7 +300,6 @@
         }
         
         async function buscarEquipe() { 
-            if (!db) return;
             try {
                 const snapshot = await getDocs(collection(db, "funcionarios")); 
                 cacheEquipe = []; 
@@ -305,13 +313,10 @@
                     seletor.innerHTML += `<option value="${dados.matricula}">${dados.nome} [${dados.funcao}]</option>`; 
                     tabelaCorpo.innerHTML += `<tr><td data-label="Matrícula" class="p-3 font-mono text-xs">${dados.matricula}</td><td data-label="Nome" class="p-3 font-semibold">${dados.nome}</td><td data-label="Função" class="p-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs">${dados.funcao}</span></td><td data-label="Ações" class="p-3 text-center"><button onclick="deletarFuncionario('${dados.matricula}')" class="text-rose-500 hover:text-rose-700 transition"><i class="fa-regular fa-trash-can"></i></button></td></tr>`; 
                 });
-            } catch(e) {
-                console.error("Erro ao buscar equipe:", e);
-            }
+            } catch(e) { console.error("Erro ao buscar equipe:", e); }
         }
         
         async function carregarCargaDoDia() { 
-            if (!db) return;
             try {
                 const snapshot = await getDocs(collection(db, "carga_diaria")); 
                 let carga = null; 
@@ -367,7 +372,7 @@
             const nome = document.getElementById('func-nome').value.trim(); 
             const funcao = document.getElementById('func-funcao').value; 
             await setDoc(doc(db, "funcionarios", matricula), { matricula, nome, funcao, tipoSetor: 'Nenhum', distrito: 'Interno' }); 
-            alert("✅ Agente inserido!"); 
+            showToast("✅ Agente inserido com sucesso!", "success");
             document.getElementById('form-funcionario').reset(); 
             await sincronizarAplicativo(); 
         });
@@ -385,9 +390,13 @@
             const setorAntigo = dadosAntigos?.tipoSetor || 'Nenhum'; 
             const distritoAntigo = dadosAntigos?.distrito || 'Interno'; 
             
+            // Atualiza o funcionário
             await updateDoc(funcRef, { tipoSetor: novoSetor, distrito: novoDistrito }); 
-            await registrarHistorico(matricula, dadosAntigos.nome, dadosAntigos.funcao, setorAntigo, novoSetor, distritoAntigo, novoDistrito); 
-            alert("✅ Roteiro atualizado e histórico salvo!"); 
+            
+            // SALVA NO HISTÓRICO DO FIREBASE
+            await salvarHistoricoFirebase(matricula, dadosAntigos.nome, dadosAntigos.funcao, setorAntigo, novoSetor, distritoAntigo, novoDistrito);
+            
+            showToast("✅ Roteiro atualizado e histórico salvo no Firebase!", "success");
             await sincronizarAplicativo(); 
             switchTab('dashboard'); 
         });
@@ -396,7 +405,7 @@
             e.preventDefault(); 
             const payload = { simples_saiu: Number(document.getElementById('carga-simples-saiu').value)||0, simples_resto: Number(document.getElementById('carga-simples-resto').value)||0, encomendas_saiu: Number(document.getElementById('carga-encomendas-saiu').value)||0, encomendas_resto: Number(document.getElementById('carga-encomendas-resto').value)||0, registrados_saiu: Number(document.getElementById('carga-registrados-saiu').value)||0, registrados_resto: Number(document.getElementById('carga-registrados-resto').value)||0, data: HOJE }; 
             await setDoc(doc(db, "carga_diaria", HOJE), payload); 
-            alert("📦 Movimento consolidado!"); 
+            showToast("📦 Movimento de carga consolidado!", "success");
             await sincronizarAplicativo(); 
             switchTab('dashboard'); 
         });
@@ -405,17 +414,22 @@
             if(confirm("Remover este agente?")){ 
                 await deleteDoc(doc(db, "funcionarios", matricula)); 
                 await sincronizarAplicativo(); 
+                showToast("🗑️ Agente removido com sucesso", "success");
             } 
         }
         
         document.getElementById('btn-limpar-filtros').addEventListener('click', ()=>{ 
             document.getElementById('filtro-historico-func').value = ''; 
             document.getElementById('filtro-historico-setor').value = ''; 
-            carregarHistorico(); 
+            carregarHistoricoFirebase(); 
         });
         
-        document.getElementById('filtro-historico-func').addEventListener('change', ()=>carregarHistorico());
-        document.getElementById('filtro-historico-setor').addEventListener('change', ()=>carregarHistorico());
+        document.getElementById('btn-atualizar-historico').addEventListener('click', ()=>{ 
+            carregarHistoricoFirebase(); 
+        });
+        
+        document.getElementById('filtro-historico-func').addEventListener('change', ()=>carregarHistoricoFirebase());
+        document.getElementById('filtro-historico-setor').addEventListener('change', ()=>carregarHistoricoFirebase());
         
         window.addEventListener('DOMContentLoaded', async () => { 
             atualizarSeletorDistritos(); 
